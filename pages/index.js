@@ -5,6 +5,7 @@ import ScoutingMetrics from '../components/ScoutingMetrics';
 import PlayerCard from '../components/PlayerCard';
 import ResumeUploader from '../components/ResumeUploader';
 import { extractPdfText } from '../lib/extractPdfText';
+import Footer from '../components/Footer';
 
 const LOCAL_COUNT_KEY = 'resumefut_cards_rated';
 
@@ -77,7 +78,7 @@ function HowItWorksModal({ onClose }) {
           <div className="bg-panel border border-hairline rounded-xl p-5">
             <p className="text-xs tracking-[0.2em] text-gold">LINKED PROFILES</p>
             <h3 className="font-display font-bold text-xl mt-2">Your resume can point to the tape.</h3>
-            <p className="text-sm text-[#8f96a5] mt-2 leading-relaxed">If your resume contains a public GitHub or LeetCode profile, ResumeFUT can use available public profile signals alongside the resume text.</p>
+            <p className="text-sm text-[#8f96a5] mt-2 leading-relaxed">If your resume contains public GitHub or LeetCode links, those profiles become additional model features. Repository activity, stars, followers, account age, solved problems and public ranking can all influence the final card.</p>
           </div>
         </div>
         <div>
@@ -85,6 +86,11 @@ function HowItWorksModal({ onClose }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             {signals.map(([code, label, desc]) => <div key={code} className="bg-ink border border-hairline rounded-lg p-4"><div className="font-display font-bold text-gold">{code}</div><div className="font-semibold text-[#d7dae2] mt-1">{label}</div><div className="text-xs text-[#747b8a] mt-1 leading-relaxed">{desc}</div></div>)}
           </div>
+        </div>
+        <div className="bg-panel border border-hairline rounded-xl p-5">
+          <p className="text-xs tracking-[0.2em] text-gold">THE MODEL</p>
+          <h3 className="font-display font-bold text-xl mt-2">Machine learning calibrates the final rating.</h3>
+          <p className="text-sm text-[#8f96a5] mt-2 leading-relaxed">ResumeFUT extracts measurable profile features, then a lightweight ridge-regression model calibrates the overall rating. When public GitHub or LeetCode profiles are present, their available signals are included in that model input.</p>
         </div>
         <div className="border-t border-hairline pt-5">
           <p className="text-xs tracking-[0.2em] text-gold">THE LADDER</p>
@@ -216,6 +222,7 @@ export default function Home() {
 
           {derbyOpen ? <section className="py-1"><div className="text-center max-w-xl mx-auto mb-6"><p className="text-xs tracking-[0.2em] uppercase text-[#6fbf73] mb-2">Your card stays locked in</p><h1 className="font-display font-bold text-3xl tracking-wide">DERBY <span className="text-gold">MODE</span></h1><p className="mt-2 text-[#9aa0b0] text-sm">Keep your card on the pitch and enter one opponent resume.</p></div>{!derbyOpponent?.card ? <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-5 items-start max-w-4xl mx-auto"><div className="flex justify-center"><PlayerCard card={{ ...card, name: displayName, photo, flag }} /></div><div><ResumeUploader title="Opponent" compact onChange={setDerbyOpponent} />{derbyError && <p className="text-sm text-red-400 mt-3">{derbyError}</p>}<button type="button" onClick={runDerby} disabled={derbyStatus === 'scoring'} className="w-full mt-4 bg-gold text-[#20180a] font-display font-semibold tracking-wide py-3 rounded-md disabled:opacity-50">{derbyStatus === 'scoring' ? 'Scouting opponent…' : '⚔️ Battle this card'}</button><button type="button" onClick={() => setDerbyOpen(false)} className="w-full mt-2 border border-hairline text-[#c7cbd6] font-medium py-2.5 rounded-md">Cancel</button></div></div> : <div className="max-w-5xl mx-auto"><div className="text-center mb-4"><h2 className="font-display font-bold text-2xl tracking-wide">{battle?.overallWinner === 'a' ? <><span className="text-gold">{displayName}</span> wins</> : battle?.overallWinner === 'b' ? <><span className="text-gold">{derbyOpponent.card.name}</span> wins</> : "IT'S A DRAW"}</h2><p className="text-sm text-[#9aa0b0] mt-1">{battle?.winsA} categories to {battle?.winsB}</p></div><div className="flex flex-col lg:flex-row items-center justify-center gap-0 mb-5"><div className={battle?.overallWinner === 'a' ? 'scale-105 transition' : 'opacity-80 transition'}><PlayerCard card={{ ...card, name: displayName, photo, flag }} /></div><div className="font-display font-bold text-2xl text-[#565c6b] px-2">VS</div><div className={battle?.overallWinner === 'b' ? 'scale-105 transition' : 'opacity-80 transition'}><PlayerCard card={derbyOpponent.card} /></div></div><div className="max-w-xl mx-auto bg-panel border border-hairline rounded-lg p-5">{battle?.rows.map((row) => <div key={row.key} className="flex items-center justify-between py-2 border-b border-hairline/60 last:border-0"><span className={`w-12 text-lg font-display font-bold ${row.winner === 'a' ? 'text-gold' : 'text-[#c7cbd6]'}`}>{row.value}</span><span className="text-xs text-[#9aa0b0] tracking-wide">{row.label}</span><span className={`w-12 text-lg font-display font-bold text-right ${row.winner === 'b' ? 'text-gold' : 'text-[#c7cbd6]'}`}>{row.b}</span></div>)}<div className="flex items-center justify-between py-2 mt-1 border-t border-hairline"><span className="w-12 text-xl font-display font-bold">{card.overall}</span><span className="text-xs tracking-[0.15em] text-[#9aa0b0]">OVERALL</span><span className="w-12 text-xl font-display font-bold text-right">{derbyOpponent.card.overall}</span></div></div><div className="text-center mt-5"><button type="button" onClick={() => { setDerbyOpponent(null); setDerbyStatus('idle'); setDerbyError(''); }} className="bg-gold text-[#20180a] font-display font-semibold tracking-wide px-5 py-2.5 rounded-md">Battle another resume</button></div></div>}</section> : <div className="grid grid-cols-1 lg:grid-cols-[230px_1fr_270px] gap-4 items-start"><AttributesPanel card={card} /><div className="flex flex-col items-center"><PlayerCard card={{ ...card, name: displayName, photo, flag }} cardRef={cardRef} editable onPhotoChange={setPhoto} onFlagChange={setFlag} /><div className="flex flex-wrap items-center justify-center gap-2 mt-2"><button type="button" onClick={handleDownload} className="flex items-center gap-2 bg-gold text-[#20180a] font-display font-semibold tracking-wide px-5 py-2 rounded-md">⭳ Download</button><button type="button" onClick={() => setDerbyOpen(true)} className="flex items-center gap-2 border border-gold/60 text-gold font-display font-semibold tracking-wide px-4 py-2 rounded-md">⚔️ Derby Mode</button><a href={shareUrl('x')} target="_blank" rel="noreferrer" className="w-9 h-9 flex items-center justify-center border border-hairline rounded-md text-[#c7cbd6]">𝕏</a><a href={shareUrl('linkedin')} target="_blank" rel="noreferrer" className="w-9 h-9 flex items-center justify-center border border-hairline rounded-md text-[#c7cbd6]">in</a></div></div><ScoutingMetrics card={card} /></div>}
         </main>
+        <Footer />
       </div>
     );
   }
@@ -243,6 +250,7 @@ export default function Home() {
             </section>
           </div>
         </main>
+        <Footer />
       </div>
 
       {uploadOpen && <UploadModal onClose={() => setUploadOpen(false)} onGenerate={handleGenerate} loading={status === 'scoring'} error={error} onResumeChange={(payload) => { setResumeText(payload?.text || ''); setError(''); }} />}

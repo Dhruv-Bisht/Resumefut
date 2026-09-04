@@ -4,7 +4,7 @@
 
 ### GET SCOUTED. ⚽
 
-**Your resume, turned into a World-Cup-style player card rated out of 99.**
+**Your resume, turned into a World-Cup-style player card rated out of 99 with lightweight ML calibration.**
 
 <a href="https://resumefut.vercel.app"><strong>Live Demo ↗</strong></a> ·
 <a href="https://github.com/Dhruv-Bisht/Resumefut"><strong>GitHub ↗</strong></a>
@@ -58,7 +58,9 @@ DOWNLOAD / SHARE / ⚔️ DERBY
 | ⬇️ PNG export | Download the finished card with the selected flag and photo |
 | ⭐ GitHub | Opens the real repository and displays its current star count |
 | ⚔️ Derby Mode | Keep your card on screen while scouting an opponent |
-| 🔗 Profile enrichment | Public GitHub and LeetCode links found in a resume can add extra signals |
+| 🤖 ML rating | A lightweight ridge-regression model calibrates the final overall rating |
+| 🔗 Profile enrichment | Public GitHub and LeetCode links found in a resume become additional model features |
+| 👤 Builder | Built by [@DhruvBisht](https://www.linkedin.com/in/dhruv-bisht-90907a348) |
 | 💡 How it works | Opens a compact scouting explainer instead of navigating away |
 
 ---
@@ -88,7 +90,7 @@ The landing page is deliberately card-first:
 | **EDU** | Education | Degrees and certifications |
 | **VER** | Versatility | Range of industries and roles |
 
-The scoring rules live in [`lib/scoring.js`](./lib/scoring.js), making the system straightforward to inspect and extend.
+The scoring rules live in [`lib/scoring.js`](./lib/scoring.js), while [`lib/mlScorer.js`](./lib/mlScorer.js) performs the lightweight ML calibration using the checked-in [`lib/ml-model.json`](./lib/ml-model.json) weights. The model is a profile-rating experiment, not a hiring or employability predictor.
 
 ---
 
@@ -119,7 +121,17 @@ Available public profile information can contribute:
 - problems solved
 - public ranking
 
-These signals are combined with the resume's own text instead of replacing it.
+These signals are combined with the resume's own text instead of replacing it. The resulting feature vector is passed through a lightweight ridge-regression calibration model before the final overall rating is produced.
+
+---
+
+## 🤖 Machine-learning rating
+
+ResumeFUT uses a small **ridge-regression calibration model** after extracting features from the resume and any public profiles found in it. The model consumes signals such as experience, skills, leadership, quantified impact, education, industry breadth, GitHub repositories/stars/followers/account age, and LeetCode solved problems/ranking.
+
+The six displayed stats remain explainable heuristics; the ML model calibrates the final overall rating so external profile evidence can affect the card without replacing the resume.
+
+The model is intentionally tiny and runs directly in Node.js using checked-in weights — no Python runtime or large ML framework is required by the web app. The included training script is `ml/train_model.py`. The current training data is synthetic, so the rating is a fun profile-calibration score, **not a hiring or employability prediction**.
 
 ---
 
@@ -190,6 +202,7 @@ The window covers:
 Resumefut/
 ├── components/
 │   ├── AttributesPanel.js
+│   ├── Footer.js
 │   ├── Header.js
 │   ├── PlayerCard.js
 │   ├── ResumeUploader.js
@@ -198,7 +211,11 @@ Resumefut/
 ├── lib/
 │   ├── countries.js
 │   ├── extractPdfText.js
+│   ├── ml-model.json
+│   ├── mlScorer.js
 │   └── scoring.js
+├── ml/
+│   └── train_model.py
 ├── pages/
 │   ├── api/
 │   │   └── analyze.js
@@ -239,6 +256,10 @@ npm run dev
 
 Open `http://localhost:3000`.
 
+### Builder
+
+ResumeFUT is built by [@DhruvBisht](https://www.linkedin.com/in/dhruv-bisht-90907a348).
+
 ### Production
 
 ```bash
@@ -257,6 +278,7 @@ npm start
 - **html-to-image** for PNG card export
 - **GitHub public API** for linked GitHub profiles
 - **LeetCode public GraphQL endpoint** for linked LeetCode profiles
+- **Lightweight ridge-regression model** for final rating calibration
 
 ---
 
