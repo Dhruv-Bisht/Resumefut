@@ -1,5 +1,4 @@
 import Header from './Header';
-import Footer from './Footer';
 
 export default function InfoPage({ eyebrow, title, children }) {
   return (
@@ -10,7 +9,6 @@ export default function InfoPage({ eyebrow, title, children }) {
         <h1 className="font-display font-bold text-4xl md:text-6xl tracking-wide leading-none mb-10">{title}</h1>
         <article className="prose-resumefut">{children}</article>
       </main>
-      <Footer />
     </div>
   );
 }
