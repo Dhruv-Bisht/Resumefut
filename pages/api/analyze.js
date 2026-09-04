@@ -15,7 +15,7 @@ export default function handler(req, res) {
   }
 
   try {
-    const card = rateResume(text, { name: name || 'Player' });
+    const card = rateResume(text, { name });
     return res.status(200).json({ card });
   } catch (err) {
     console.error(err);

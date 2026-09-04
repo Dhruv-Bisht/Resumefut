@@ -15,6 +15,23 @@ Resumes solve the same problem legitimately: everyone already has one, PDF
 parsing is trivial and fully client-side, and there's no ToS or auth to
 fight.
 
+## Layout
+
+The results page mirrors a scouting report, not just a bare card:
+
+- **Header** — rating badge, name (auto-detected from the resume, click to
+  edit), position, archetype, and a one-line style tagline
+- **Left panel** — attributes (skill moves / weak foot / work rate / style,
+  as star ratings) and detected "playstyles"
+- **Center** — the downloadable FUT-style card itself
+- **Right panel** — scouting metrics: each of the six stats alongside the
+  real underlying signal it came from (e.g. "6 yrs tracked", "9 skills
+  matched") with a progress bar
+
+Name entry has been removed from the form — `extractName()` in
+`lib/scoring.js` pulls it from the top of the resume text, and it's
+editable inline on the results page if it guesses wrong.
+
 ## Stack
 
 - **Next.js** (pages router) + **Tailwind CSS**
