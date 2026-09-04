@@ -35,8 +35,7 @@ DOWNLOAD / SHARE / ⚔️ DERBY
 ```
 
 <div align="center">
-<img src="./docs/assets/frontend-reference.png" width="25%" alt="ResumeFUT frontend" />
-<img src="./docs/assets/card-example.png" width="25%" alt="ResumeFUT player card" />
+<img src="./docs/assets/resumefut-hero.png" width="12.5%" alt="ResumeFUT" />
 </div>
 
 ---
@@ -64,7 +63,6 @@ ResumeFUT scores six areas:
 | **EDU** | Education |
 | **VER** | Versatility |
 
-The final rating combines the resume signals with a lightweight calibration model.
 
 ---
 
