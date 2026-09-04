@@ -2,7 +2,7 @@
   "name": "resumefut",
   "version": "0.1.0",
   "private": true,
-  "description": "Your resume, scouted. Turns a resume into a FUT-style player card using a fully local, open-source heuristic rating engine.",
+  "description": "Your resume, scouted. Turns a resume into a FUT-style player card using a transparent resume-scoring engine.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

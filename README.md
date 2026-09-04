@@ -1,10 +1,10 @@
 <div align="center">
 
-# 🃏 ResumeFUT
+# ResumeFUT
 
-### Your resume. Scouted like a football player.
+### GET SCOUTED. ⚽
 
-Turn a resume into a **FUT-style player card rated out of 99** — with position, archetype, six scouting stats, playstyles, nationality, photo, downloads, sharing and Derby Mode.
+**Your resume, turned into a World-Cup-style player card rated out of 99.**
 
 <a href="https://resumefut.vercel.app"><strong>Live Demo ↗</strong></a> ·
 <a href="https://github.com/Dhruv-Bisht/Resumefut"><strong>GitHub ↗</strong></a>
@@ -13,116 +13,174 @@ Turn a resume into a **FUT-style player card rated out of 99** — with position
 
 ![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)
 ![React](https://img.shields.io/badge/React-18-61dafb?logo=react)
-![Tailwind](https://img.shields.io/badge/Tailwind_CSS-3-38bdf8?logo=tailwindcss)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-38bdf8?logo=tailwindcss)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 </div>
 
 ---
 
-## ✨ What is ResumeFUT?
+## 🃏 What is ResumeFUT?
 
-ResumeFUT takes the information already present in a resume and turns it into a football-style scouting card.
+ResumeFUT turns a resume into a football-style scouting card.
 
-**Upload → Scout → Get your card → Share it → Derby against another resume.**
-
-The interface is intentionally playful: the result is meant to feel like opening a player card rather than reading another boring resume score.
+```text
+RESUME
+  ↓
+SCOUT
+  ↓
+PLAYER CARD
+  ↓
+CUSTOMIZE PHOTO + NATIONALITY
+  ↓
+DOWNLOAD / SHARE / ⚔️ DERBY
+```
 
 <div align="center">
 
-![ResumeFUT frontend direction](./docs/assets/frontend-reference.png)
+![ResumeFUT frontend](./docs/assets/frontend-reference.png)
 
-<sub>Frontend direction: dark football-card aesthetic, bold scouting typography and a card-first experience.</sub>
+![ResumeFUT player card](./docs/assets/card-example.png)
 
 </div>
 
-> **Note:** The image above is a visual reference for the UI direction. The application itself is implemented in React/Next.js.
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---|---|
+| 📄 Resume PDF | Upload a PDF from the Scout popup and extract its text |
+| ✍️ Paste text | Paste a resume directly when a PDF isn't available |
+| 🃏 Player card | Overall, position, tier, six stats and archetype |
+| 📷 Photo | Add a photo using the small camera icon inside the card |
+| 🌍 Nationality | Choose a flag from a searchable nationality picker inside the card |
+| ⬇️ PNG export | Download the finished card with the selected flag and photo |
+| ⭐ GitHub | Opens the real repository and displays its current star count |
+| ⚔️ Derby Mode | Keep your card on screen while scouting an opponent |
+| 🔗 Profile enrichment | Public GitHub and LeetCode links found in a resume can add extra signals |
+| 💡 How it works | Opens a compact scouting explainer instead of navigating away |
 
 ---
 
-## 🏟️ Features
+## 🏟️ The first screen
 
-| Feature | What it does |
-| --- | --- |
-| 📄 **PDF scouting** | Extract resume text directly in the browser and generate a card |
-| ✍️ **Paste mode** | Paste resume text when you don't have a PDF |
-| 🃏 **Player card** | Overall rating, position, tier, six stats and archetype |
-| 📷 **Card photo** | Add/change the player's photo directly from the card |
-| 🌍 **Nationality** | Pick a nationality using the small flag control on the card |
-| ⬇️ **Download** | Export the finished card as a PNG |
-| 🔗 **Sharing** | Share the result to X or LinkedIn |
-| ⚔️ **Derby Mode** | Keep your current card on screen and challenge it with another resume |
-| ⭐ **GitHub** | Open the real ResumeFUT repository and see its current star count |
-| 📊 **Card counter** | Tracks cards generated in the current browser |
+The landing page is deliberately card-first:
+
+- **GET SCOUTED.** is the main visual.
+- The sample cards are compact so they don't dominate the viewport.
+- The resume field is a single clean CTA: **`resume.pdf or paste text`**.
+- Clicking it opens the **Build Your Card** popup.
+- The card counter sits directly under the CTA.
+- **how it works ↗** opens a mini scouting window.
+- **Star on GitHub** links directly to the repository.
 
 ---
 
-## ⚽ The scouting stats
+## 📊 The six stats
 
-ResumeFUT produces six ratings from the resume text:
-
-| Code | Stat | Looks at |
-| :---: | --- | --- |
-| **EXP** | Experience | Tenure, date ranges and seniority language |
-| **SKL** | Skills | Recognized tools, technologies and skills |
-| **LED** | Leadership | Management, ownership and team language |
-| **IMP** | Impact | Quantified achievements and results-driven language |
+| Code | Stat | Reads |
+|:---:|---|---|
+| **EXP** | Experience | Years, role history and seniority |
+| **SKL** | Skills | Tools, technologies and skill breadth |
+| **LED** | Leadership | Ownership, mentoring and management language |
+| **IMP** | Impact | Quantified achievements and results |
 | **EDU** | Education | Degrees and certifications |
-| **VER** | Versatility | Number of different role/industry buckets detected |
+| **VER** | Versatility | Range of industries and roles |
 
-The scoring engine is deliberately readable and deterministic, so contributors can inspect and extend the rules without needing a model pipeline.
+The scoring rules live in [`lib/scoring.js`](./lib/scoring.js), making the system straightforward to inspect and extend.
 
-<details>
-<summary><strong>🎮 How a card is generated</strong></summary>
+---
 
-1. A user uploads a PDF or pastes resume text.
-2. PDF text is extracted in the browser.
-3. The text is sent to the app's `/api/analyze` route.
-4. `lib/scoring.js` calculates the six stats.
-5. The dominant signals determine position and archetype.
-6. The UI renders the final player card.
-7. The user can edit their name and customize the photo/nationality directly on the card.
+## 🔗 GitHub + LeetCode enrichment
 
-</details>
+If a resume contains a public profile URL such as:
+
+```text
+https://github.com/username
+https://leetcode.com/u/username/
+```
+
+ResumeFUT extracts the username and looks up available public profile information while generating the card.
+
+### GitHub signals
+
+Public profile information can contribute:
+
+- public repository count
+- followers
+- repository stars
+- GitHub account age
+
+### LeetCode signals
+
+Available public profile information can contribute:
+
+- problems solved
+- public ranking
+
+These signals are combined with the resume's own text instead of replacing it.
 
 ---
 
 ## ⚔️ Derby Mode
 
-Derby Mode is now **card-first**.
-
-You don't leave your scouting result to start a derby:
+Derby starts **after your card already exists**.
 
 ```text
-Your Resume
+YOUR RESUME
     ↓
-Your Player Card
-    ↓
-⚔️ Derby Mode
-    ↓
-Your card stays visible + enter opponent resume
-    ↓
-Opponent card
-    ↓
-HEAD-TO-HEAD STAT BATTLE
+YOUR CARD ───────────────┐
+                         │
+                    ⚔️ DERBY MODE
+                         │
+                         ↓
+                 ENTER OPPONENT RESUME
+                         │
+                         ↓
+                OPPONENT PLAYER CARD
+                         │
+                         ↓
+                  STAT-BY-STAT BATTLE
 ```
 
-Each of the six stats is compared. The player who wins the most categories wins the derby. If the category score is tied, overall rating breaks the tie.
-
-The old standalone `/derby` upload flow has been removed from the main experience so the derby starts from an existing card.
+Your original card stays locked on the pitch while the opponent is scouted. The six stats are compared one by one and the player winning the most categories takes the derby.
 
 ---
 
-## 🖼️ Card customization
+## 🌍 Nationality picker
 
-The card itself owns the profile customization controls.
+Nationality is part of the card rather than the landing-page form.
 
-- **📷 Camera icon** → add or replace the photo.
-- **🌍 Flag icon** → choose nationality.
-- **Name** → edit it from the scouting result.
-- **Download** → export the card after customization.
+The picker includes:
 
-This keeps the first page focused on one job: **submit the resume**.
+- a compact flag button
+- a searchable country list
+- a scrollable results area
+- a clean selection state
+- a flag that remains visible in the exported PNG
+
+The visible flag is intentionally separated from the picker controls during export, so the download contains the nationality.
+
+---
+
+## 💡 The Scout's Eye
+
+Click **how it works ↗** on the landing page to open the mini scouting window.
+
+It explains:
+
+> **WE DON'T JUST RATE YOU. WE READ YOU.**
+
+Six signals are read from the resume and weighed against each other to find your shape. That shape becomes your card — so two people with similar numbers can still walk out with different players.
+
+The window covers:
+
+- **Measured against you** — how the signals interact inside one profile.
+- **Every card has a shape** — why strengths and weaknesses change the archetype.
+- **The 90s are earned** — why a strong card needs depth across multiple signals.
+- **Linked profiles** — how public GitHub and LeetCode links can add extra context.
+- **What feeds the six** — a quick explanation of EXP, SKL, LED, IMP, EDU and VER.
 
 ---
 
@@ -144,8 +202,8 @@ Resumefut/
 ├── pages/
 │   ├── api/
 │   │   └── analyze.js
-│   ├── index.js
-│   └── derby.js
+│   ├── derby.js
+│   └── index.js
 ├── styles/
 │   └── globals.css
 ├── docs/
@@ -167,21 +225,21 @@ git clone https://github.com/Dhruv-Bisht/Resumefut.git
 cd Resumefut
 ```
 
-### 2. Install
+### 2. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Start development server
+### 3. Start development
 
 ```bash
 npm run dev
 ```
 
-Open **http://localhost:3000**.
+Open `http://localhost:3000`.
 
-### Production build
+### Production
 
 ```bash
 npm run build
@@ -192,101 +250,44 @@ npm start
 
 ## 🛠️ Tech stack
 
-- **Next.js 14** — application framework
-- **React 18** — UI
-- **Tailwind CSS** — styling
-- **pdfjs-dist** — browser-side PDF text extraction
-- **html-to-image** — card PNG export
-- **JavaScript** — scoring and UI logic
-
----
-
-## 🔍 Scoring engine
-
-The core scoring logic lives in [`lib/scoring.js`](./lib/scoring.js).
-
-The engine uses transparent keyword, regex and signal-based rules. That makes it intentionally easy to understand and modify.
-
-For example:
-
-```text
-Resume text
-    │
-    ├── date ranges ───────────→ EXP
-    ├── skill keywords ────────→ SKL
-    ├── leadership language ───→ LED
-    ├── quantified results ────→ IMP
-    ├── degrees/certificates ──→ EDU
-    └── industry buckets ──────→ VER
-                                      │
-                                      ↓
-                              Overall / Position
-                                      │
-                                      ↓
-                               Player Card 🃏
-```
-
-<details>
-<summary><strong>🧠 Want to extend the engine?</strong></summary>
-
-Good contribution ideas:
-
-- Improve date-range parsing.
-- Add more skills and tools.
-- Add industry-specific keyword groups.
-- Improve name extraction.
-- Add more archetypes.
-- Improve the card visual system.
-- Add more card tiers.
-- Build shareable card pages.
-- Add automated tests for scoring edge cases.
-
-</details>
-
----
-
-## ⭐ GitHub button
-
-The **Star on GitHub** button points to the actual repository:
-
-`https://github.com/Dhruv-Bisht/Resumefut`
-
-The displayed star count is fetched from the repository so it isn't a hard-coded number. Clicking the button takes the user to GitHub, where they can authenticate and star the repository.
-
-> GitHub does not allow an unauthenticated website button to silently star a repository on a user's behalf. The correct UX is to send the user to the repository's official GitHub page.
-
----
-
-## 📈 Card counter
-
-The landing page shows how many cards have been generated **in the current browser** using `localStorage`.
-
-This avoids pretending that the project has a global database-backed counter when it currently doesn't. A true global counter would require persistent server-side storage.
+- **Next.js 14**
+- **React 18**
+- **Tailwind CSS**
+- **pdfjs-dist** for PDF text extraction
+- **html-to-image** for PNG card export
+- **GitHub public API** for linked GitHub profiles
+- **LeetCode public GraphQL endpoint** for linked LeetCode profiles
 
 ---
 
 ## 🤝 Contributing
 
-Pull requests are welcome.
+ResumeFUT is designed to be easy to extend.
 
-1. Fork the repository.
-2. Create a branch:
-   ```bash
-   git checkout -b feature/my-feature
-   ```
-3. Make your changes.
-4. Test the production build:
-   ```bash
-   npm run build
-   ```
-5. Commit and push.
-6. Open a pull request.
+Good areas for contributions:
 
-If you're changing scoring rules, explain the new signal and include examples where possible.
+- Add more countries.
+- Improve resume parsing.
+- Add more skill keywords.
+- Improve GitHub/LeetCode enrichment.
+- Add more card tiers.
+- Add new archetypes.
+- Improve Derby Mode.
+- Add tests for scoring edge cases.
+- Improve card designs and animations.
+
+```bash
+git checkout -b feature/my-change
+git add .
+git commit -m "feat: improve scouting experience"
+git push origin feature/my-change
+```
+
+Then open a pull request.
 
 ---
 
-## 📜 License
+## 📄 License
 
 MIT — see [`LICENSE`](./LICENSE).
 
@@ -294,8 +295,8 @@ MIT — see [`LICENSE`](./LICENSE).
 
 <div align="center">
 
-### Built for people who think resumes deserve better than a PDF. ⚽🃏
+### Resume in. Card out. 🃏
 
-**ResumeFUT** · Scout yourself.
+**Get scouted.**
 
 </div>
