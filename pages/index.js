@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+
 import Header from '../components/Header';
 import AttributesPanel from '../components/AttributesPanel';
 import ScoutingMetrics from '../components/ScoutingMetrics';
@@ -17,16 +18,26 @@ const SAMPLE_CARDS = [
 
 function readLocalCardCount() {
   if (typeof window === 'undefined') return 0;
-  const value = Number.parseInt(window.localStorage.getItem(LOCAL_COUNT_KEY) || '0', 10);
+
+  const value = Number.parseInt(
+    window.localStorage.getItem(LOCAL_COUNT_KEY) || '0',
+    10
+  );
+
   return Number.isFinite(value) ? value : 0;
 }
 
 function Modal({ title, children, onClose, wide = false }) {
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && onClose();
+
     document.addEventListener('keydown', onKey);
     document.body.style.overflow = 'hidden';
-    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
+
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
   }, [onClose]);
 
   return (
@@ -44,66 +55,195 @@ function Modal({ title, children, onClose, wide = false }) {
 
 function HowItWorksModal({ onClose }) {
   const signals = [
-    ['EXP', 'Experience', 'Years, roles, tenure and seniority language.'],
-    ['SKL', 'Skills', 'Tools, technologies, problem-solving breadth and linked coding activity.'],
-    ['LED', 'Leadership', 'Ownership, mentoring, management and public GitHub reach.'],
-    ['IMP', 'Impact', 'Quantified achievements, results, repository stars and competitive coding signal.'],
-    ['EDU', 'Education', 'Degrees, certifications and academic credentials.'],
-    ['VER', 'Versatility', 'Different industries, roles and technical areas represented.'],
+    [
+      'EXP',
+      'Experience',
+      'Years, roles, tenure and seniority language.',
+    ],
+    [
+      'SKL',
+      'Skills',
+      'Tools, technologies, problem-solving breadth and linked coding activity.',
+    ],
+    [
+      'LED',
+      'Leadership',
+      'Ownership, mentoring, management and public GitHub reach.',
+    ],
+    [
+      'IMP',
+      'Impact',
+      'Quantified achievements, results, repository stars and competitive coding signal.',
+    ],
+    [
+      'EDU',
+      'Education',
+      'Degrees, certifications and academic credentials.',
+    ],
+    [
+      'VER',
+      'Versatility',
+      'Different industries, roles and technical areas represented.',
+    ],
   ];
 
   return (
-    <Modal title="THE SCOUT'S EYE" onClose={onClose} wide>
+    <Modal
+      title="THE SCOUT'S EYE"
+      onClose={onClose}
+      wide
+    >
       <div className="space-y-8">
         <div>
           <p className="font-display font-bold text-xl sm:text-2xl tracking-wide">WE DON'T JUST RATE YOU. <span className="text-gold">WE READ YOU.</span></p>
           <p className="mt-3 text-[#aeb4c1] leading-relaxed">Six signals are read from your resume and weighed against each other to find your shape. That shape becomes your card — so two people with similar numbers can still walk out with completely different players.</p>
         </div>
+
         <div className="grid md:grid-cols-2 gap-5">
           <div className="bg-panel border border-hairline rounded-xl p-5">
-            <p className="text-xs tracking-[0.2em] text-gold">MEASURED AGAINST YOU</p>
-            <h3 className="font-display font-bold text-xl mt-2">Your own curve, not the world's.</h3>
-            <p className="text-sm text-[#8f96a5] mt-2 leading-relaxed">Each stat is weighed against the rest of your profile, so a high one marks where you stand out and a low one shows where you don't.</p>
+            <p className="text-xs tracking-[0.2em] text-gold">
+              MEASURED AGAINST YOU
+            </p>
+
+            <h3 className="font-display font-bold text-xl mt-2">
+              Your own curve, not the world's.
+            </h3>
+
+            <p className="text-sm text-[#8f96a5] mt-2 leading-relaxed">
+              Each stat is weighed against the rest of your profile, so
+              a high one marks where you stand out and a low one shows
+              where you don't.
+            </p>
           </div>
+
           <div className="bg-panel border border-hairline rounded-xl p-5">
-            <p className="text-xs tracking-[0.2em] text-gold">EVERY CARD HAS A SHAPE</p>
-            <h3 className="font-display font-bold text-xl mt-2">Nobody's elite at everything.</h3>
-            <p className="text-sm text-[#8f96a5] mt-2 leading-relaxed">Your strongest signals push your archetype forward while your weaker areas pull it back. The card tells the story your stats create.</p>
+            <p className="text-xs tracking-[0.2em] text-gold">
+              EVERY CARD HAS A SHAPE
+            </p>
+
+            <h3 className="font-display font-bold text-xl mt-2">
+              Nobody's elite at everything.
+            </h3>
+
+            <p className="text-sm text-[#8f96a5] mt-2 leading-relaxed">
+              Your strongest signals push your archetype forward while
+              your weaker areas pull it back. The card tells the story
+              your stats create.
+            </p>
           </div>
+
           <div className="bg-panel border border-hairline rounded-xl p-5">
-            <p className="text-xs tracking-[0.2em] text-gold">THE 90s ARE EARNED</p>
-            <h3 className="font-display font-bold text-xl mt-2">A strong profile needs a track record.</h3>
-            <p className="text-sm text-[#8f96a5] mt-2 leading-relaxed">Legendary territory is reserved for profiles with enough depth across the signals. One flashy line does not decide the whole card.</p>
+            <p className="text-xs tracking-[0.2em] text-gold">
+              THE 90s ARE EARNED
+            </p>
+
+            <h3 className="font-display font-bold text-xl mt-2">
+              A strong profile needs a track record.
+            </h3>
+
+            <p className="text-sm text-[#8f96a5] mt-2 leading-relaxed">
+              Legendary territory is reserved for profiles with enough
+              depth across the signals. One flashy line does not decide
+              the whole card.
+            </p>
           </div>
+
           <div className="bg-panel border border-hairline rounded-xl p-5">
-            <p className="text-xs tracking-[0.2em] text-gold">LINKED PROFILES</p>
-            <h3 className="font-display font-bold text-xl mt-2">Your resume can point to the tape.</h3>
-            <p className="text-sm text-[#8f96a5] mt-2 leading-relaxed">If your resume contains public GitHub or LeetCode links, those profiles become additional model features. Repository activity, stars, followers, account age, solved problems and public ranking can all influence the final card.</p>
+            <p className="text-xs tracking-[0.2em] text-gold">
+              LINKED PROFILES
+            </p>
+
+            <h3 className="font-display font-bold text-xl mt-2">
+              Your resume can point to the tape.
+            </h3>
+
+            <p className="text-sm text-[#8f96a5] mt-2 leading-relaxed">
+              If your resume contains public GitHub or LeetCode links,
+              those profiles become additional model features.
+              Repository activity, stars, followers, account age,
+              solved problems and public ranking can all influence the
+              final card.
+            </p>
           </div>
         </div>
+
         <div>
-          <p className="text-xs tracking-[0.2em] text-gold mb-3">WHAT FEEDS THE SIX</p>
+          <p className="text-xs tracking-[0.2em] text-gold mb-3">
+            WHAT FEEDS THE SIX
+          </p>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-            {signals.map(([code, label, desc]) => <div key={code} className="bg-ink border border-hairline rounded-lg p-4"><div className="font-display font-bold text-gold">{code}</div><div className="font-semibold text-[#d7dae2] mt-1">{label}</div><div className="text-xs text-[#747b8a] mt-1 leading-relaxed">{desc}</div></div>)}
+            {signals.map(([code, label, desc]) => (
+              <div
+                key={code}
+                className="bg-ink border border-hairline rounded-lg p-4"
+              >
+                <div className="font-display font-bold text-gold">
+                  {code}
+                </div>
+
+                <div className="font-semibold text-[#d7dae2] mt-1">
+                  {label}
+                </div>
+
+                <div className="text-xs text-[#747b8a] mt-1 leading-relaxed">
+                  {desc}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
+
         <div className="border-t border-hairline pt-5">
-          <p className="text-xs tracking-[0.2em] text-gold">THE LADDER</p>
-          <p className="font-display font-bold text-xl mt-2">BRONZE → SILVER → GOLD → IN-FORM → TOTY → ICON</p>
-          <p className="text-sm text-[#8f96a5] mt-2">Your tier, position and archetype are generated from the profile signals the scouting engine finds.</p>
+          <p className="text-xs tracking-[0.2em] text-gold">
+            THE LADDER
+          </p>
+
+          <p className="font-display font-bold text-xl mt-2">
+            BRONZE → SILVER → GOLD → IN-FORM → TOTY → ICON
+          </p>
+
+          <p className="text-sm text-[#8f96a5] mt-2">
+            Your tier, position and archetype are generated from the
+            profile signals the scouting engine finds.
+          </p>
         </div>
       </div>
     </Modal>
   );
 }
 
-function UploadModal({ onClose, onGenerate, loading, error, onResumeChange }) {
+function UploadModal({
+  onClose,
+  onGenerate,
+  loading,
+  error,
+  onResumeChange,
+}) {
   return (
     <Modal title="BUILD YOUR CARD" onClose={onClose}>
-      <p className="text-sm text-[#9aa0b0] mb-5">Upload a resume PDF or paste the text. If the resume contains public GitHub or LeetCode links, those profiles can add extra scouting signal.</p>
+      <p className="text-sm text-[#9aa0b0] mb-5">
+        Upload a resume PDF or paste the text. If the resume contains
+        public GitHub or LeetCode links, those profiles can add extra
+        scouting signal.
+      </p>
+
       <ResumeUploader onChange={onResumeChange} />
-      {error && <p className="text-sm text-red-400 mt-4">{error}</p>}
-      <button type="button" onClick={onGenerate} disabled={loading} className="w-full mt-5 bg-gold text-[#20180a] font-display font-semibold tracking-wide py-3.5 rounded-lg disabled:opacity-50">{loading ? 'Scouting…' : 'Generate my card →'}</button>
+
+      {error && (
+        <p className="text-sm text-red-400 mt-4">
+          {error}
+        </p>
+      )}
+
+      <button
+        type="button"
+        onClick={onGenerate}
+        disabled={loading}
+        className="w-full mt-5 bg-gold text-[#20180a] font-display font-semibold tracking-wide py-3.5 rounded-lg disabled:opacity-50"
+      >
+        {loading ? 'Scouting…' : 'Generate my card →'}
+      </button>
     </Modal>
   );
 }
@@ -111,16 +251,21 @@ function UploadModal({ onClose, onGenerate, loading, error, onResumeChange }) {
 export default function Home() {
   const [status, setStatus] = useState('idle');
   const [error, setError] = useState('');
+
   const [card, setCard] = useState(null);
   const [displayName, setDisplayName] = useState('');
   const [editingName, setEditingName] = useState(false);
+
   const [photo, setPhoto] = useState('');
   const [flag, setFlag] = useState('');
+
   const [cardsRated, setCardsRated] = useState(0);
   const [githubStars, setGithubStars] = useState(null);
+
   const [uploadOpen, setUploadOpen] = useState(false);
   const [resumeText, setResumeText] = useState('');
   const [resumePageCount, setResumePageCount] = useState(null);
+
   const [derbyOpen, setDerbyOpen] = useState(false);
   const [derbyOpponent, setDerbyOpponent] = useState(null);
   const [derbyStatus, setDerbyStatus] = useState('idle');
@@ -132,41 +277,90 @@ export default function Home() {
 
   useEffect(() => {
     setCardsRated(readLocalCardCount());
-    fetch('https://api.github.com/repos/Dhruv-Bisht/Resumefut', { headers: { Accept: 'application/vnd.github+json' } })
+
+    fetch(
+      'https://api.github.com/repos/Dhruv-Bisht/Resumefut',
+      {
+        headers: {
+          Accept: 'application/vnd.github+json',
+        },
+      }
+    )
       .then((res) => (res.ok ? res.json() : null))
-      .then((data) => { if (data && typeof data.stargazers_count === 'number') setGithubStars(data.stargazers_count); })
-      .catch(() => {});
+      .then((data) => {
+        if (
+          data &&
+          typeof data.stargazers_count === 'number'
+        ) {
+          setGithubStars(data.stargazers_count);
+        }
+      })
+      .catch(() => { });
   }, []);
 
   function recordCardRated() {
     const next = readLocalCardCount() + 1;
-    if (typeof window !== 'undefined') window.localStorage.setItem(LOCAL_COUNT_KEY, String(next));
+
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(
+        LOCAL_COUNT_KEY,
+        String(next)
+      );
+    }
+
     setCardsRated(next);
   }
 
   async function scoreResume(text, pageCount = null) {
-    const res = await fetch('/api/analyze', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, pageCount }) });
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        text,
+        pageCount,
+      }),
+    });
+
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Something went wrong.');
+
+    if (!res.ok) {
+      throw new Error(
+        data.error || 'Something went wrong.'
+      );
+    }
+
     return data.card;
   }
 
   async function handleGenerate() {
     if (!resumeText || resumeText.trim().length < 30) {
-      setError('Add your resume first — upload a PDF or paste more text.');
+      setError(
+        'Add your resume first — upload a PDF or paste more text.'
+      );
       return;
     }
+
     setError('');
     setStatus('scoring');
+
     try {
-      const nextCard = await scoreResume(resumeText, resumePageCount);
+      const nextCard = await scoreResume(
+        resumeText,
+        resumePageCount
+      );
+
       setCard(nextCard);
       setDisplayName(nextCard.name);
       setUploadOpen(false);
       setStatus('done');
       recordCardRated();
     } catch (err) {
-      setError(err.message || 'Something went wrong scoring that resume.');
+      setError(
+        err.message ||
+        'Something went wrong scoring that resume.'
+      );
       setStatus('error');
     }
   }
@@ -186,7 +380,11 @@ export default function Home() {
       });
 
       const background = new Image();
+<<<<<<< HEAD
       background.src = '/bg-image.jpg';
+=======
+      background.src = '/football-background.webp';
+>>>>>>> c7f382737530f42c3b17db790903571a5a7640a0
 
       await new Promise((resolve, reject) => {
         background.onload = resolve;
@@ -233,42 +431,156 @@ export default function Home() {
 
   async function handleDownload() {
     if (!cardRef.current) return;
+
     const { toPng } = await import('html-to-image');
-    const dataUrl = await toPng(cardRef.current, { pixelRatio: 2, backgroundColor: '#0b0e14', filter: (node) => !node?.dataset?.cardControl });
+
+    const dataUrl = await toPng(cardRef.current, {
+      pixelRatio: 2,
+      backgroundColor: '#0b0e14',
+      filter: (node) =>
+        !node?.dataset?.cardControl,
+    });
+
     const link = document.createElement('a');
-    link.download = `${displayName.replace(/\s+/g, '-').toLowerCase() || 'resumefut'}-card.png`;
+
+    link.download = `${displayName
+      .replace(/\s+/g, '-')
+      .toLowerCase() || 'resumefut'
+      }-card.png`;
+
     link.href = dataUrl;
     link.click();
   }
 
   function shareUrl(kind) {
     const text = `I just got scouted by ResumeFUT — ${displayName} rated ${card.overall} OVR as ${card.position}.`;
-    if (kind === 'x') return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-    return `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://resumefut.vercel.app')}`;
+
+    if (kind === 'x') {
+      return `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        text
+      )}`;
+    }
+
+    return `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+      'https://resumefut.vercel.app'
+    )}`;
   }
 
   function reset() {
-    setCard(null); setStatus('idle'); setError(''); setDisplayName(''); setPhoto(''); setFlag(''); setResumeText(''); setResumePageCount(null); setDerbyOpen(false); setDerbyOpponent(null); setDerbyStatus('idle'); setDerbyError(''); setDerbyBattleStarted(false);
+    setCard(null);
+    setStatus('idle');
+    setError('');
+    setDisplayName('');
+    setPhoto('');
+    setFlag('');
+    setResumeText('');
+    setResumePageCount(null);
+
+    setDerbyOpen(false);
+    setDerbyOpponent(null);
+    setDerbyStatus('idle');
+    setDerbyError('');
+    setDerbyBattleStarted(false);
   }
 
   async function runDerby() {
-    if (!derbyOpponent?.text || derbyOpponent.text.trim().length < 30) { setDerbyError('Add the opponent resume first.'); return; }
-    setDerbyError(''); setDerbyStatus('scoring');
+    if (
+      !derbyOpponent?.text ||
+      derbyOpponent.text.trim().length < 30
+    ) {
+      setDerbyError(
+        'Add the opponent resume first.'
+      );
+      return;
+    }
+
+    setDerbyError('');
+    setDerbyStatus('scoring');
+
     try {
-      const opponent = await scoreResume(derbyOpponent.text, derbyOpponent.pageCount);
-      opponent.photo = derbyOpponent.photo; opponent.flag = derbyOpponent.flag;
-      setDerbyOpponent({ ...derbyOpponent, card: opponent }); setDerbyStatus('ready'); setDerbyBattleStarted(false); recordCardRated();
-    } catch (err) { setDerbyError(err.message || 'Could not scout the opponent.'); setDerbyStatus('error'); }
+      const opponent = await scoreResume(
+        derbyOpponent.text,
+        derbyOpponent.pageCount
+      );
+
+      opponent.photo = derbyOpponent.photo;
+      opponent.flag = derbyOpponent.flag;
+
+      setDerbyOpponent({
+        ...derbyOpponent,
+        card: opponent,
+      });
+
+      setDerbyStatus('ready');
+      setDerbyBattleStarted(false);
+
+      recordCardRated();
+    } catch (err) {
+      setDerbyError(
+        err.message ||
+        'Could not scout the opponent.'
+      );
+
+      setDerbyStatus('error');
+    }
   }
 
   function decideDerby(cardA, cardB) {
-    let winsA = 0; let winsB = 0;
-    const rows = cardA.statList.map((a, index) => { const b = cardB.statList[index]; const winner = a.value > b.value ? 'a' : b.value > a.value ? 'b' : null; if (winner === 'a') winsA += 1; if (winner === 'b') winsB += 1; return { ...a, b: b.value, winner }; });
-    const overallWinner = winsA > winsB ? 'a' : winsB > winsA ? 'b' : cardA.overall > cardB.overall ? 'a' : cardB.overall > cardA.overall ? 'b' : null;
-    return { rows, winsA, winsB, overallWinner };
+    let winsA = 0;
+    let winsB = 0;
+
+    const rows = cardA.statList.map(
+      (a, index) => {
+        const b = cardB.statList[index];
+
+        const winner =
+          a.value > b.value
+            ? 'a'
+            : b.value > a.value
+              ? 'b'
+              : null;
+
+        if (winner === 'a') winsA += 1;
+        if (winner === 'b') winsB += 1;
+
+        return {
+          ...a,
+          b: b.value,
+          winner,
+        };
+      }
+    );
+
+    const overallWinner =
+      winsA > winsB
+        ? 'a'
+        : winsB > winsA
+          ? 'b'
+          : cardA.overall > cardB.overall
+            ? 'a'
+            : cardB.overall > cardA.overall
+              ? 'b'
+              : null;
+
+    return {
+      rows,
+      winsA,
+      winsB,
+      overallWinner,
+    };
   }
 
-  const battle = derbyOpponent?.card ? decideDerby({ ...card, name: displayName, photo, flag }, derbyOpponent.card) : null;
+  const battle = derbyOpponent?.card
+    ? decideDerby(
+      {
+        ...card,
+        name: displayName,
+        photo,
+        flag,
+      },
+      derbyOpponent.card
+    )
+    : null;
 
   if (card) {
     return (
@@ -286,6 +598,7 @@ export default function Home() {
   return (
     <div className="min-h-screen text-[#e7e9ee] font-body relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0 pitch-glow" />
+
       <div className="relative">
         <Header githubStars={githubStars} />
         <main className="max-w-6xl mx-auto px-4 sm:px-5 md:px-8 pt-4 md:pt-6 pb-8 sm:pb-10">
@@ -301,11 +614,27 @@ export default function Home() {
             <section className="relative h-[390px] sm:h-[470px] hidden lg:block" aria-label="Sample ResumeFUT cards">
               <div className="absolute inset-0 flex items-center justify-center -translate-y-5">
                 <div className="absolute w-[430px] h-[330px] rounded-full bg-gold/10 blur-3xl" />
-                {SAMPLE_CARDS.map((sample, index) => <div key={sample.name} className={`absolute transition-transform duration-500 hover:z-30 hover:scale-105 ${index === 0 ? 'z-20 rotate-[-8deg] translate-x-[-150px]' : index === 1 ? 'z-10 translate-x-0 translate-y-[-18px]' : 'z-0 rotate-[8deg] translate-x-[150px]'}`}><PlayerCard card={sample} /></div>)}
+
+                {SAMPLE_CARDS.map(
+                  (sample, index) => (
+                    <div
+                      key={sample.name}
+                      className={`absolute transition-transform duration-500 hover:z-30 hover:scale-105 ${index === 0
+                        ? 'z-20 rotate-[-8deg] translate-x-[-150px]'
+                        : index === 1
+                          ? 'z-10 translate-x-0 translate-y-[-18px]'
+                          : 'z-0 rotate-[8deg] translate-x-[150px]'
+                        }`}
+                    >
+                      <PlayerCard card={sample} />
+                    </div>
+                  )
+                )}
               </div>
             </section>
           </div>
         </main>
+
         <Footer />
       </div>
 
