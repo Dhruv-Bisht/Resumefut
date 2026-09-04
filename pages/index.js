@@ -443,58 +443,118 @@ export default function Home() {
     }
   }
 
+  //   async function handleDerbyDownload() {
+  //   if (!derbyResultRef.current) return;
+
+  //   const { toPng } = await import('html-to-image');
+
+  //   const element = derbyResultRef.current;
+
+  //   // Save original styles
+  //   const originalBackgroundImage = element.style.backgroundImage;
+  //   const originalBackgroundSize = element.style.backgroundSize;
+  //   const originalBackgroundPosition = element.style.backgroundPosition;
+  //   const originalBackgroundRepeat = element.style.backgroundRepeat;
+
+  //   // Add football background ONLY while downloading
+  //   element.style.backgroundImage =
+  //     "linear-gradient(180deg, rgba(11,14,20,0.58) 0%, rgba(11,14,20,0.68) 55%, rgba(11,14,20,0.80) 100%), url('/football-background.webp')";
+
+  //   element.style.backgroundSize = 'cover';
+  //   element.style.backgroundPosition = 'center';
+  //   element.style.backgroundRepeat = 'no-repeat';
+
+  //   try {
+  //     const dataUrl = await toPng(element, {
+  //       pixelRatio: 2,
+  //       cacheBust: true,
+  //       filter: (node) =>
+  //         !node?.dataset?.captureControl,
+  //     });
+
+  //     const link = document.createElement('a');
+
+  //     const winner =
+  //       battle?.overallWinner === 'b'
+  //         ? derbyOpponent?.card?.name
+  //         : displayName;
+
+  //     link.download = `${(
+  //       winner || 'resumefut'
+  //     )
+  //       .replace(/\s+/g, '-')
+  //       .toLowerCase()}-derby-result.png`;
+
+  //     link.href = dataUrl;
+  //     link.click();
+  //   } finally {
+  //     // Restore the page appearance
+  //     element.style.backgroundImage = originalBackgroundImage;
+  //     element.style.backgroundSize = originalBackgroundSize;
+  //     element.style.backgroundPosition = originalBackgroundPosition;
+  //     element.style.backgroundRepeat = originalBackgroundRepeat;
+  //   }
+  // }
+
   async function handleDerbyDownload() {
-  if (!derbyResultRef.current) return;
+    if (!derbyResultRef.current) return;
 
-  const { toPng } = await import('html-to-image');
+    const { toPng } = await import('html-to-image');
 
-  const element = derbyResultRef.current;
+    const element = derbyResultRef.current;
 
-  // Save original styles
-  const originalBackgroundImage = element.style.backgroundImage;
-  const originalBackgroundSize = element.style.backgroundSize;
-  const originalBackgroundPosition = element.style.backgroundPosition;
-  const originalBackgroundRepeat = element.style.backgroundRepeat;
+    // Make sure the background image is already loaded
+    const bgImage = new Image();
+    bgImage.src = '/football-background.webp';
 
-  // Add football background ONLY while downloading
-  element.style.backgroundImage =
-    "linear-gradient(180deg, rgba(11,14,20,0.58) 0%, rgba(11,14,20,0.68) 55%, rgba(11,14,20,0.80) 100%), url('/football-background.webp')";
+    try {
+      await bgImage.decode();
+    } catch {
+      // Continue even if decode is unavailable
+    }
 
-  element.style.backgroundSize = 'cover';
-  element.style.backgroundPosition = 'center';
-  element.style.backgroundRepeat = 'no-repeat';
+    const originalBackgroundImage = element.style.backgroundImage;
+    const originalBackgroundSize = element.style.backgroundSize;
+    const originalBackgroundPosition = element.style.backgroundPosition;
+    const originalBackgroundRepeat = element.style.backgroundRepeat;
 
-  try {
-    const dataUrl = await toPng(element, {
-      pixelRatio: 2,
-      cacheBust: true,
-      filter: (node) =>
-        !node?.dataset?.captureControl,
-    });
+    element.style.backgroundImage =
+      "linear-gradient(180deg, rgba(11,14,20,0.58) 0%, rgba(11,14,20,0.68) 55%, rgba(11,14,20,0.80) 100%), url('/football-background.webp')";
 
-    const link = document.createElement('a');
+    element.style.backgroundSize = 'cover';
+    element.style.backgroundPosition = 'center';
+    element.style.backgroundRepeat = 'no-repeat';
 
-    const winner =
-      battle?.overallWinner === 'b'
-        ? derbyOpponent?.card?.name
-        : displayName;
+    try {
+      const dataUrl = await toPng(element, {
+        pixelRatio: 1.5,
+        cacheBust: false,
+        filter: (node) =>
+          !node?.dataset?.captureControl,
+      });
 
-    link.download = `${(
-      winner || 'resumefut'
-    )
-      .replace(/\s+/g, '-')
-      .toLowerCase()}-derby-result.png`;
+      const link = document.createElement('a');
 
-    link.href = dataUrl;
-    link.click();
-  } finally {
-    // Restore the page appearance
-    element.style.backgroundImage = originalBackgroundImage;
-    element.style.backgroundSize = originalBackgroundSize;
-    element.style.backgroundPosition = originalBackgroundPosition;
-    element.style.backgroundRepeat = originalBackgroundRepeat;
+      const winner =
+        battle?.overallWinner === 'b'
+          ? derbyOpponent?.card?.name
+          : displayName;
+
+      link.download = `${(
+        winner || 'resumefut'
+      )
+        .replace(/\s+/g, '-')
+        .toLowerCase()}-derby-result.png`;
+
+      link.href = dataUrl;
+      link.click();
+    } finally {
+      element.style.backgroundImage = originalBackgroundImage;
+      element.style.backgroundSize = originalBackgroundSize;
+      element.style.backgroundPosition = originalBackgroundPosition;
+      element.style.backgroundRepeat = originalBackgroundRepeat;
+    }
   }
-}
   async function handleDownload() {
     if (!cardRef.current) return;
 
@@ -510,8 +570,8 @@ export default function Home() {
     const link = document.createElement('a');
 
     link.download = `${displayName
-        .replace(/\s+/g, '-')
-        .toLowerCase() || 'resumefut'
+      .replace(/\s+/g, '-')
+      .toLowerCase() || 'resumefut'
       }-card.png`;
 
     link.href = dataUrl;
@@ -965,13 +1025,13 @@ export default function Home() {
                 <div
                   ref={derbyResultRef}
                   className="max-w-5xl mx-auto rounded-2xl overflow-hidden"
-                  // style={{
-                    // backgroundImage:
-                    //   "linear-gradient(180deg, rgba(11, 14, 20, 0.58) 0%, rgba(11, 14, 20, 0.68) 55%, rgba(11, 14, 20, 0.80) 100%), url('/football-background.webp')",
-                    // backgroundSize: 'cover',
-                    // backgroundPosition: 'center',
-                    // backgroundRepeat: 'no-repeat',
-                  // }}
+                // style={{
+                // backgroundImage:
+                //   "linear-gradient(180deg, rgba(11, 14, 20, 0.58) 0%, rgba(11, 14, 20, 0.68) 55%, rgba(11, 14, 20, 0.80) 100%), url('/football-background.webp')",
+                // backgroundSize: 'cover',
+                // backgroundPosition: 'center',
+                // backgroundRepeat: 'no-repeat',
+                // }}
                 >
                   <div className="p-4 md:p-7">
                     <div className="text-center mb-4">
@@ -1053,8 +1113,8 @@ export default function Home() {
                         >
                           <span
                             className={`w-12 text-lg font-display font-bold ${row.winner === 'a'
-                                ? 'text-gold'
-                                : 'text-[#c7cbd6]'
+                              ? 'text-gold'
+                              : 'text-[#c7cbd6]'
                               }`}
                           >
                             {row.value}
@@ -1066,8 +1126,8 @@ export default function Home() {
 
                           <span
                             className={`w-12 text-lg font-display font-bold text-right ${row.winner === 'b'
-                                ? 'text-gold'
-                                : 'text-[#c7cbd6]'
+                              ? 'text-gold'
+                              : 'text-[#c7cbd6]'
                               }`}
                           >
                             {row.b}
@@ -1284,10 +1344,10 @@ export default function Home() {
                     <div
                       key={sample.name}
                       className={`absolute transition-transform duration-500 hover:z-30 hover:scale-105 ${index === 0
-                          ? 'z-20 rotate-[-8deg] translate-x-[-150px]'
-                          : index === 1
-                            ? 'z-10 translate-x-0 translate-y-[-18px]'
-                            : 'z-0 rotate-[8deg] translate-x-[150px]'
+                        ? 'z-20 rotate-[-8deg] translate-x-[-150px]'
+                        : index === 1
+                          ? 'z-10 translate-x-0 translate-y-[-18px]'
+                          : 'z-0 rotate-[8deg] translate-x-[150px]'
                         }`}
                     >
                       <PlayerCard card={sample} />
