@@ -121,6 +121,7 @@ export default function Home() {
   const [uploadOpen, setUploadOpen] = useState(false);
   const [howOpen, setHowOpen] = useState(false);
   const [resumeText, setResumeText] = useState('');
+  const [resumePageCount, setResumePageCount] = useState(null);
   const [derbyOpen, setDerbyOpen] = useState(false);
   const [derbyOpponent, setDerbyOpponent] = useState(null);
   const [derbyStatus, setDerbyStatus] = useState('idle');
@@ -143,8 +144,8 @@ export default function Home() {
     setCardsRated(next);
   }
 
-  async function scoreResume(text) {
-    const res = await fetch('/api/analyze', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }) });
+  async function scoreResume(text, pageCount = null) {
+    const res = await fetch('/api/analyze', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, pageCount }) });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Something went wrong.');
     return data.card;
@@ -158,7 +159,7 @@ export default function Home() {
     setError('');
     setStatus('scoring');
     try {
-      const nextCard = await scoreResume(resumeText);
+      const nextCard = await scoreResume(resumeText, resumePageCount);
       setCard(nextCard);
       setDisplayName(nextCard.name);
       setUploadOpen(false);
@@ -187,14 +188,14 @@ export default function Home() {
   }
 
   function reset() {
-    setCard(null); setStatus('idle'); setError(''); setDisplayName(''); setPhoto(''); setFlag(''); setResumeText(''); setDerbyOpen(false); setDerbyOpponent(null); setDerbyStatus('idle'); setDerbyError(''); setDerbyBattleStarted(false);
+    setCard(null); setStatus('idle'); setError(''); setDisplayName(''); setPhoto(''); setFlag(''); setResumeText(''); setResumePageCount(null); setDerbyOpen(false); setDerbyOpponent(null); setDerbyStatus('idle'); setDerbyError(''); setDerbyBattleStarted(false);
   }
 
   async function runDerby() {
     if (!derbyOpponent?.text || derbyOpponent.text.trim().length < 30) { setDerbyError('Add the opponent resume first.'); return; }
     setDerbyError(''); setDerbyStatus('scoring');
     try {
-      const opponent = await scoreResume(derbyOpponent.text);
+      const opponent = await scoreResume(derbyOpponent.text, derbyOpponent.pageCount);
       opponent.photo = derbyOpponent.photo; opponent.flag = derbyOpponent.flag;
       setDerbyOpponent({ ...derbyOpponent, card: opponent }); setDerbyStatus('ready'); setDerbyBattleStarted(false); recordCardRated();
     } catch (err) { setDerbyError(err.message || 'Could not scout the opponent.'); setDerbyStatus('error'); }
@@ -249,7 +250,7 @@ export default function Home() {
         <Footer />
       </div>
 
-      {uploadOpen && <UploadModal onClose={() => setUploadOpen(false)} onGenerate={handleGenerate} loading={status === 'scoring'} error={error} onResumeChange={(payload) => { setResumeText(payload?.text || ''); setError(''); }} />}
+      {uploadOpen && <UploadModal onClose={() => setUploadOpen(false)} onGenerate={handleGenerate} loading={status === 'scoring'} error={error} onResumeChange={(payload) => { setResumeText(payload?.text || ''); setResumePageCount(payload?.pageCount ?? null); setError(''); }} />}
       {howOpen && <HowItWorksModal onClose={() => setHowOpen(false)} />}
     </div>
   );

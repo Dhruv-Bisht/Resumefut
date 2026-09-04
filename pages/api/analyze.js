@@ -72,12 +72,12 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { text, name } = req.body || {};
+  const { text, name, pageCount } = req.body || {};
   if (!text || typeof text !== 'string') {
     return res.status(400).json({ error: 'Add a resume PDF or paste your resume text first.' });
   }
 
-  const validation = validateResumeText(text);
+  const validation = validateResumeText(text, { pageCount });
   if (!validation.valid) {
     return res.status(400).json({ error: validation.message });
   }

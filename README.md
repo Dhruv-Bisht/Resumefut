@@ -325,3 +325,7 @@ MIT — see [`LICENSE`](./LICENSE).
 
 ### Resume validation
 ResumeFUT accepts resume-style documents with recognizable sections such as Experience, Skills, Projects, Education and Contact. It rejects common non-resume documents such as admit cards, hall tickets and examination documents before scoring.
+
+## Resume validation
+
+ResumeFUT accepts **PDF resumes up to 3 pages**. Uploaded PDFs are checked before scoring using page count plus document-shape signals. The validator looks for a resume-like combination of contact details, sections, role/date information, and work/project evidence, while rejecting common non-resume documents such as books, reports, admit cards, hall tickets and marksheets. Long-form documents are rejected even when they happen to contain words such as "skills" or "education".

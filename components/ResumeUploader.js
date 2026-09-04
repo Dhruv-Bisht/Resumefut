@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { extractPdfText } from '../lib/extractPdfText';
+import { extractPdfTextWithMetadata } from '../lib/extractPdfText';
 import { validateResumeText } from '../lib/resumeValidation';
 
 export default function ResumeUploader({ title, compact = false, onChange }) {
@@ -10,15 +10,15 @@ export default function ResumeUploader({ title, compact = false, onChange }) {
   const [error, setError] = useState('');
   const fileInputRef = useRef(null);
 
-  function publishText(text) {
-    const validation = validateResumeText(text);
+  function publishText(text, options = {}) {
+    const validation = validateResumeText(text, options);
     if (!validation.valid) {
       setError(validation.message);
       onChange?.({ text: '', valid: false });
       return false;
     }
     setError('');
-    onChange?.({ text, valid: true });
+    onChange?.({ text, valid: true, pageCount: options.pageCount ?? null });
     return true;
   }
 
@@ -29,11 +29,11 @@ export default function ResumeUploader({ title, compact = false, onChange }) {
     setError('');
     setReading(true);
     try {
-      const text = await extractPdfText(file);
-      if (!publishText(text)) return;
+      const result = await extractPdfTextWithMetadata(file);
+      if (!publishText(result.text, { pageCount: result.pageCount })) return;
     } catch (err) {
       console.error(err);
-      setError("Couldn't read that PDF — try another resume PDF or paste the text instead.");
+      setError(err?.code === 'TOO_MANY_PAGES' ? err.message : "Couldn't read that PDF — try another resume PDF or paste the text instead.");
       onChange?.({ text: '', valid: false });
     } finally {
       setReading(false);
@@ -74,7 +74,7 @@ export default function ResumeUploader({ title, compact = false, onChange }) {
       )}
       <div className="mt-4 rounded-md border border-hairline/70 bg-ink/60 p-3">
         <p className="text-[10px] uppercase tracking-[0.16em] text-gold mb-1.5">Resume format</p>
-        <p className="text-[11px] leading-relaxed text-[#7f8797]">Use a real resume with sections such as Contact, Experience, Skills, Projects, Education or Certifications. Exam/admit cards, marksheets and other documents are rejected.</p>
+        <p className="text-[11px] leading-relaxed text-[#7f8797]">Upload a standard resume of <strong className="text-[#c7cbd6]">3 pages or fewer</strong>. ResumeFUT checks document structure and rejects books, reports, exam/admit cards and other non-resume PDFs.</p>
       </div>
       {error && <p className="text-xs text-red-400 mt-3 leading-relaxed">{error}</p>}
     </div>
