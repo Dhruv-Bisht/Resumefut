@@ -96,9 +96,8 @@ function Modal({ title, children, onClose, wide = false }) {
       }
     >
       <div
-        className={`${
-          wide ? 'max-w-3xl' : 'max-w-xl'
-        } w-full max-h-[90vh] overflow-y-auto bg-[#11151e] border border-hairline rounded-2xl shadow-2xl`}
+        className={`${wide ? 'max-w-3xl' : 'max-w-xl'
+          } w-full max-h-[90vh] overflow-y-auto bg-[#11151e] border border-hairline rounded-2xl shadow-2xl`}
       >
         <div className="sticky top-0 z-10 flex items-center justify-between px-5 py-4 bg-[#11151e]/95 backdrop-blur border-b border-hairline">
           <h2 className="font-display font-bold tracking-wide text-lg">
@@ -374,7 +373,7 @@ export default function Home() {
           setGithubStars(data.stargazers_count);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   function recordCardRated() {
@@ -438,7 +437,7 @@ export default function Home() {
     } catch (err) {
       setError(
         err.message ||
-          'Something went wrong scoring that resume.'
+        'Something went wrong scoring that resume.'
       );
       setStatus('error');
     }
@@ -487,11 +486,10 @@ export default function Home() {
 
     const link = document.createElement('a');
 
-    link.download = `${
-      displayName
+    link.download = `${displayName
         .replace(/\s+/g, '-')
         .toLowerCase() || 'resumefut'
-    }-card.png`;
+      }-card.png`;
 
     link.href = dataUrl;
     link.click();
@@ -563,7 +561,7 @@ export default function Home() {
     } catch (err) {
       setDerbyError(
         err.message ||
-          'Could not scout the opponent.'
+        'Could not scout the opponent.'
       );
 
       setDerbyStatus('error');
@@ -582,8 +580,8 @@ export default function Home() {
           a.value > b.value
             ? 'a'
             : b.value > a.value
-            ? 'b'
-            : null;
+              ? 'b'
+              : null;
 
         if (winner === 'a') winsA += 1;
         if (winner === 'b') winsB += 1;
@@ -600,12 +598,12 @@ export default function Home() {
       winsA > winsB
         ? 'a'
         : winsB > winsA
-        ? 'b'
-        : cardA.overall > cardB.overall
-        ? 'a'
-        : cardB.overall > cardA.overall
-        ? 'b'
-        : null;
+          ? 'b'
+          : cardA.overall > cardB.overall
+            ? 'a'
+            : cardB.overall > cardA.overall
+              ? 'b'
+              : null;
 
     return {
       rows,
@@ -617,14 +615,14 @@ export default function Home() {
 
   const battle = derbyOpponent?.card
     ? decideDerby(
-        {
-          ...card,
-          name: displayName,
-          photo,
-          flag,
-        },
-        derbyOpponent.card
-      )
+      {
+        ...card,
+        name: displayName,
+        photo,
+        flag,
+      },
+      derbyOpponent.card
+    )
     : null;
 
   if (card) {
@@ -784,13 +782,13 @@ export default function Home() {
                       onClick={runDerby}
                       disabled={
                         derbyStatus ===
-                          'scoring' ||
+                        'scoring' ||
                         !derbyOpponent?.text
                       }
                       className="w-full mt-4 bg-gold text-[#20180a] font-display font-semibold tracking-wide py-3 rounded-md disabled:opacity-50"
                     >
                       {derbyStatus ===
-                      'scoring'
+                        'scoring'
                         ? 'Scouting opponent…'
                         : 'Scout opponent →'}
                     </button>
@@ -933,19 +931,30 @@ export default function Home() {
                   </div>
                 </div>
               ) : (
+                // <div
+                //   ref={derbyResultRef}
+                //   className="max-w-5xl mx-auto rounded-2xl overflow-hidden border"
+                //   style={{
+                //     background: 'transparent',
+                //     border: 'none',
+                //   }}
+                // >
                 <div
                   ref={derbyResultRef}
-                  className="max-w-5xl mx-auto rounded-2xl overflow-hidden border"
+                  className="max-w-5xl mx-auto rounded-2xl overflow-hidden"
                   style={{
-                    background: 'transparent',
-                    border: 'none',
+                    backgroundImage:
+                      "linear-gradient(180deg, rgba(11, 14, 20, 0.58) 0%, rgba(11, 14, 20, 0.68) 55%, rgba(11, 14, 20, 0.80) 100%), url('/football-background.webp')",
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
                   }}
                 >
                   <div className="p-4 md:p-7">
                     <div className="text-center mb-4">
                       <h2 className="font-display font-bold text-2xl tracking-wide">
                         {battle?.overallWinner ===
-                        'a' ? (
+                          'a' ? (
                           <>
                             <span className="text-gold">
                               {displayName}
@@ -978,7 +987,7 @@ export default function Home() {
                       <div
                         className={
                           battle?.overallWinner ===
-                          'a'
+                            'a'
                             ? 'scale-105 transition'
                             : 'opacity-80 transition'
                         }
@@ -1000,7 +1009,7 @@ export default function Home() {
                       <div
                         className={
                           battle?.overallWinner ===
-                          'b'
+                            'b'
                             ? 'scale-105 transition'
                             : 'opacity-80 transition'
                         }
@@ -1020,11 +1029,10 @@ export default function Home() {
                           className="flex items-center justify-between py-2 border-b border-hairline/60 last:border-0"
                         >
                           <span
-                            className={`w-12 text-lg font-display font-bold ${
-                              row.winner === 'a'
+                            className={`w-12 text-lg font-display font-bold ${row.winner === 'a'
                                 ? 'text-gold'
                                 : 'text-[#c7cbd6]'
-                            }`}
+                              }`}
                           >
                             {row.value}
                           </span>
@@ -1034,11 +1042,10 @@ export default function Home() {
                           </span>
 
                           <span
-                            className={`w-12 text-lg font-display font-bold text-right ${
-                              row.winner === 'b'
+                            className={`w-12 text-lg font-display font-bold text-right ${row.winner === 'b'
                                 ? 'text-gold'
                                 : 'text-[#c7cbd6]'
-                            }`}
+                              }`}
                           >
                             {row.b}
                           </span>
@@ -1253,13 +1260,12 @@ export default function Home() {
                   (sample, index) => (
                     <div
                       key={sample.name}
-                      className={`absolute transition-transform duration-500 hover:z-30 hover:scale-105 ${
-                        index === 0
+                      className={`absolute transition-transform duration-500 hover:z-30 hover:scale-105 ${index === 0
                           ? 'z-20 rotate-[-8deg] translate-x-[-150px]'
                           : index === 1
-                          ? 'z-10 translate-x-0 translate-y-[-18px]'
-                          : 'z-0 rotate-[8deg] translate-x-[150px]'
-                      }`}
+                            ? 'z-10 translate-x-0 translate-y-[-18px]'
+                            : 'z-0 rotate-[8deg] translate-x-[150px]'
+                        }`}
                     >
                       <PlayerCard card={sample} />
                     </div>
