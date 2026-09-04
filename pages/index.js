@@ -496,6 +496,66 @@ export default function Home() {
   //   }
   // }
 
+  // async function handleDerbyDownload() {
+  //   if (!derbyResultRef.current) return;
+
+  //   const { toPng } = await import('html-to-image');
+
+  //   const element = derbyResultRef.current;
+
+  //   // Make sure the background image is already loaded
+  //   const bgImage = new Image();
+  //   bgImage.src = '/football-background.webp';
+
+  //   try {
+  //     await bgImage.decode();
+  //   } catch {
+  //     // Continue even if decode is unavailable
+  //   }
+
+  //   const originalBackgroundImage = element.style.backgroundImage;
+  //   const originalBackgroundSize = element.style.backgroundSize;
+  //   const originalBackgroundPosition = element.style.backgroundPosition;
+  //   const originalBackgroundRepeat = element.style.backgroundRepeat;
+
+  //   element.style.backgroundImage =
+  //     "linear-gradient(180deg, rgba(11,14,20,0.58) 0%, rgba(11,14,20,0.68) 55%, rgba(11,14,20,0.80) 100%), url('/football-background.webp')";
+
+  //   element.style.backgroundSize = 'cover';
+  //   element.style.backgroundPosition = 'center';
+  //   element.style.backgroundRepeat = 'no-repeat';
+
+  //   try {
+  //     const dataUrl = await toPng(element, {
+  //       pixelRatio: 1.5,
+  //       cacheBust: false,
+  //       filter: (node) =>
+  //         !node?.dataset?.captureControl,
+  //     });
+
+  //     const link = document.createElement('a');
+
+  //     const winner =
+  //       battle?.overallWinner === 'b'
+  //         ? derbyOpponent?.card?.name
+  //         : displayName;
+
+  //     link.download = `${(
+  //       winner || 'resumefut'
+  //     )
+  //       .replace(/\s+/g, '-')
+  //       .toLowerCase()}-derby-result.png`;
+
+  //     link.href = dataUrl;
+  //     link.click();
+  //   } finally {
+  //     element.style.backgroundImage = originalBackgroundImage;
+  //     element.style.backgroundSize = originalBackgroundSize;
+  //     element.style.backgroundPosition = originalBackgroundPosition;
+  //     element.style.backgroundRepeat = originalBackgroundRepeat;
+  //   }
+  // }
+
   async function handleDerbyDownload() {
     if (!derbyResultRef.current) return;
 
@@ -503,36 +563,87 @@ export default function Home() {
 
     const element = derbyResultRef.current;
 
-    // Make sure the background image is already loaded
-    const bgImage = new Image();
-    bgImage.src = '/football-background.webp';
-
     try {
-      await bgImage.decode();
-    } catch {
-      // Continue even if decode is unavailable
-    }
-
-    const originalBackgroundImage = element.style.backgroundImage;
-    const originalBackgroundSize = element.style.backgroundSize;
-    const originalBackgroundPosition = element.style.backgroundPosition;
-    const originalBackgroundRepeat = element.style.backgroundRepeat;
-
-    element.style.backgroundImage =
-      "linear-gradient(180deg, rgba(11,14,20,0.58) 0%, rgba(11,14,20,0.68) 55%, rgba(11,14,20,0.80) 100%), url('/football-background.webp')";
-
-    element.style.backgroundSize = 'cover';
-    element.style.backgroundPosition = 'center';
-    element.style.backgroundRepeat = 'no-repeat';
-
-    try {
-      const dataUrl = await toPng(element, {
-        pixelRatio: 1.5,
+      // 1. Capture the transparent Derby result
+      const resultDataUrl = await toPng(element, {
+        pixelRatio: 2,
         cacheBust: false,
+        backgroundColor: 'transparent',
         filter: (node) =>
           !node?.dataset?.captureControl,
       });
 
+      // 2. Load the football background
+      const background = new Image();
+      background.src = '/football-background.webp';
+
+      await new Promise((resolve, reject) => {
+        background.onload = resolve;
+        background.onerror = reject;
+
+        // If already cached
+        if (background.complete) {
+          resolve();
+        }
+      });
+
+      // 3. Load the transparent Derby result
+      const result = new Image();
+      result.src = resultDataUrl;
+
+      await new Promise((resolve, reject) => {
+        result.onload = resolve;
+        result.onerror = reject;
+      });
+
+      // 4. Create an off-screen canvas
+      const canvas = document.createElement('canvas');
+
+      const width = result.naturalWidth;
+      const height = result.naturalHeight;
+
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext('2d');
+
+      // 5. Draw football background
+      const scale = Math.max(
+        width / background.naturalWidth,
+        height / background.naturalHeight
+      );
+
+      const bgWidth = background.naturalWidth * scale;
+      const bgHeight = background.naturalHeight * scale;
+
+      const bgX = (width - bgWidth) / 2;
+      const bgY = (height - bgHeight) / 2;
+
+      ctx.drawImage(
+        background,
+        bgX,
+        bgY,
+        bgWidth,
+        bgHeight
+      );
+
+      // 6. Add dark overlay like your website body
+      ctx.fillStyle = 'rgba(11,14,20,0.68)';
+      ctx.fillRect(0, 0, width, height);
+
+      // 7. Draw transparent Derby result over background
+      ctx.drawImage(
+        result,
+        0,
+        0,
+        width,
+        height
+      );
+
+      // 8. Convert final canvas to PNG
+      const dataUrl = canvas.toDataURL('image/png');
+
+      // 9. Preserve your existing winner-based filename
       const link = document.createElement('a');
 
       const winner =
@@ -548,11 +659,9 @@ export default function Home() {
 
       link.href = dataUrl;
       link.click();
-    } finally {
-      element.style.backgroundImage = originalBackgroundImage;
-      element.style.backgroundSize = originalBackgroundSize;
-      element.style.backgroundPosition = originalBackgroundPosition;
-      element.style.backgroundRepeat = originalBackgroundRepeat;
+
+    } catch (error) {
+      console.error('Failed to download Derby result:', error);
     }
   }
   async function handleDownload() {
