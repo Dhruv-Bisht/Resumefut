@@ -1,0 +1,24 @@
+{
+  "name": "resumefut",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Your resume, scouted. Turns a resume into a FUT-style player card using a fully local, open-source heuristic rating engine.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "html-to-image": "^1.11.11",
+    "next": "14.2.5",
+    "pdfjs-dist": "3.11.174",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4"
+  }
+}
