@@ -380,11 +380,7 @@ export default function Home() {
       });
 
       const background = new Image();
-<<<<<<< HEAD
-      background.src = '/bg-image.jpg';
-=======
       background.src = '/football-background.webp';
->>>>>>> c7f382737530f42c3b17db790903571a5a7640a0
 
       await new Promise((resolve, reject) => {
         background.onload = resolve;
