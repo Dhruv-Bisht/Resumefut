@@ -4,6 +4,7 @@ import AttributesPanel from '../components/AttributesPanel';
 import ScoutingMetrics from '../components/ScoutingMetrics';
 import PlayerCard from '../components/PlayerCard';
 import { extractPdfText } from '../lib/extractPdfText';
+import { COUNTRIES } from '../lib/countries';
 
 export default function Home() {
   const [mode, setMode] = useState('pdf'); // 'pdf' | 'paste'
@@ -14,10 +15,21 @@ export default function Home() {
   const [card, setCard] = useState(null);
   const [displayName, setDisplayName] = useState('');
   const [editingName, setEditingName] = useState(false);
+  const [photo, setPhoto] = useState('');
+  const [flag, setFlag] = useState('');
 
   const extractedTextRef = useRef('');
   const cardRef = useRef(null);
   const fileInputRef = useRef(null);
+  const photoInputRef = useRef(null);
+
+  function handlePhoto(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => setPhoto(reader.result);
+    reader.readAsDataURL(file);
+  }
 
   async function handleFile(e) {
     const file = e.target.files?.[0];
@@ -93,6 +105,8 @@ export default function Home() {
     setPastedText('');
     setFileLabel('');
     setDisplayName('');
+    setPhoto('');
+    setFlag('');
     extractedTextRef.current = '';
     if (fileInputRef.current) fileInputRef.current.value = '';
   }
@@ -136,6 +150,7 @@ export default function Home() {
               )}
 
               <div className="flex flex-wrap items-center gap-2.5 mt-3 text-sm">
+                {flag && <span className="text-lg leading-none">{flag}</span>}
                 <span className="bg-gold text-[#20180a] font-semibold px-2 py-0.5 rounded">
                   {card.position}
                 </span>
@@ -158,7 +173,7 @@ export default function Home() {
             <AttributesPanel card={card} />
 
             <div className="flex flex-col items-center">
-              <PlayerCard card={{ ...card, name: displayName }} cardRef={cardRef} />
+              <PlayerCard card={{ ...card, name: displayName, photo, flag }} cardRef={cardRef} />
               <div className="flex items-center gap-3 mt-4">
                 <button
                   type="button"
@@ -282,11 +297,39 @@ export default function Home() {
 
               {error && <p className="text-sm text-red-400 mt-4">{error}</p>}
 
+              <div className="flex gap-3 mt-5">
+                <label className="flex-1 flex items-center gap-2 border border-hairline rounded-md px-3 py-2.5 cursor-pointer hover:border-gold/50 transition">
+                  <span className="text-base" aria-hidden="true">🖼️</span>
+                  <span className="text-xs text-[#9aa0b0] truncate">
+                    {photo ? 'Photo added ✓' : 'Add a photo (optional)'}
+                  </span>
+                  <input
+                    ref={photoInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhoto}
+                    className="hidden"
+                  />
+                </label>
+
+                <select
+                  value={flag}
+                  onChange={(e) => setFlag(e.target.value)}
+                  className="flex-1 bg-ink border border-hairline rounded-md px-2 py-2.5 text-xs text-[#c7cbd6] focus:outline-none focus:ring-2 focus:ring-signal"
+                >
+                  {COUNTRIES.map((c) => (
+                    <option key={c.code || 'none'} value={c.flag}>
+                      {c.flag ? `${c.flag} ${c.name}` : c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <button
                 type="button"
                 onClick={handleGenerate}
                 disabled={status === 'reading' || status === 'scoring'}
-                className="w-full mt-6 bg-gold text-[#20180a] font-display font-semibold tracking-wide py-3 rounded-md disabled:opacity-50"
+                className="w-full mt-5 bg-gold text-[#20180a] font-display font-semibold tracking-wide py-3 rounded-md disabled:opacity-50"
               >
                 {status === 'scoring' ? 'Scouting…' : 'Generate my card'}
               </button>
@@ -306,6 +349,15 @@ export default function Home() {
                 Your card appears here
               </p>
             </div>
+          </div>
+
+          <div className="max-w-3xl mx-auto mt-6 text-center">
+            <a
+              href="/derby"
+              className="inline-flex items-center gap-2 text-sm text-[#c7cbd6] border border-hairline rounded-full px-5 py-2.5 hover:border-gold/60 transition"
+            >
+              ⚔️ Or battle two resumes in Derby Mode
+            </a>
           </div>
 
           <section id="how-it-works" className="max-w-3xl mx-auto mt-24 scroll-mt-20">

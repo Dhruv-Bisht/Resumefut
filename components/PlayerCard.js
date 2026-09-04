@@ -20,7 +20,7 @@ function initialsFrom(name) {
 }
 
 export default function PlayerCard({ card, cardRef }) {
-  const { name, overall, position, archetype, tier, statList } = card;
+  const { name, overall, position, archetype, tier, statList, photo, flag } = card;
   const textClass = TIER_TEXT_CLASS[tier] || TIER_TEXT_CLASS.silver;
 
   return (
@@ -28,7 +28,7 @@ export default function PlayerCard({ card, cardRef }) {
       <div
         className={`card-shield card-tier-${tier} w-[300px] h-[420px] relative flex flex-col items-center pt-8 px-6`}
       >
-        {/* rating + position */}
+        {/* rating + position + nationality */}
         <div className={`absolute left-6 top-7 text-left ${textClass}`}>
           <div className="font-display font-bold text-5xl leading-none text-shadow-soft">
             {overall}
@@ -36,6 +36,11 @@ export default function PlayerCard({ card, cardRef }) {
           <div className="font-display font-semibold text-lg tracking-wide mt-1 border-t border-current/40 pt-1 w-12">
             {position}
           </div>
+          {flag && (
+            <div className="text-xl mt-1.5 leading-none" title="Nationality">
+              {flag}
+            </div>
+          )}
         </div>
 
         {/* tier badge */}
@@ -45,11 +50,15 @@ export default function PlayerCard({ card, cardRef }) {
           </div>
         </div>
 
-        {/* monogram / avatar */}
-        <div className="mt-6 mb-2 w-32 h-32 rounded-full bg-black/15 flex items-center justify-center">
-          <span className={`font-display font-bold text-4xl ${textClass}`}>
-            {initialsFrom(name)}
-          </span>
+        {/* photo / monogram */}
+        <div className="mt-6 mb-2 w-32 h-32 rounded-full bg-black/15 flex items-center justify-center overflow-hidden">
+          {photo ? (
+            <img src={photo} alt="" className="w-full h-full object-cover" />
+          ) : (
+            <span className={`font-display font-bold text-4xl ${textClass}`}>
+              {initialsFrom(name)}
+            </span>
+          )}
         </div>
 
         {/* name */}

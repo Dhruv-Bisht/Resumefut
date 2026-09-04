@@ -1,3 +1,5 @@
+import Tooltip from './Tooltip';
+
 function Stars({ count, total = 5 }) {
   return (
     <div className="flex gap-1" aria-label={`${count} out of ${total} stars`}>
@@ -19,6 +21,13 @@ function SectionLabel({ children }) {
   );
 }
 
+const ATTRIBUTE_HELP = {
+  skillMoves: 'How deep the resume goes on named skills and tools — more distinct, current skills means more stars.',
+  weakFoot: "Versatility — how comfortable this person looks operating outside their core lane, across industries.",
+  workRate: "Leadership / Impact, side by side — how much of the resume reads as managing others vs. driving measurable results.",
+  style: 'A one-word summary of the strongest stat category on the card.',
+};
+
 export default function AttributesPanel({ card }) {
   const { attributes, playstyles, style } = card;
 
@@ -28,19 +37,27 @@ export default function AttributesPanel({ card }) {
         <SectionLabel>ATTRIBUTES</SectionLabel>
 
         <div className="flex items-center justify-between py-2.5 border-b border-hairline/70">
-          <span className="text-sm text-[#c7cbd6]">Skill moves</span>
+          <Tooltip text={ATTRIBUTE_HELP.skillMoves}>
+            <span className="text-sm text-[#c7cbd6]">Skill moves</span>
+          </Tooltip>
           <Stars count={attributes.skillMoves} />
         </div>
         <div className="flex items-center justify-between py-2.5 border-b border-hairline/70">
-          <span className="text-sm text-[#c7cbd6]">Weak foot</span>
+          <Tooltip text={ATTRIBUTE_HELP.weakFoot}>
+            <span className="text-sm text-[#c7cbd6]">Weak foot</span>
+          </Tooltip>
           <Stars count={attributes.weakFoot} />
         </div>
         <div className="flex items-center justify-between py-2.5 border-b border-hairline/70">
-          <span className="text-sm text-[#c7cbd6]">Work rate</span>
+          <Tooltip text={ATTRIBUTE_HELP.workRate}>
+            <span className="text-sm text-[#c7cbd6]">Work rate</span>
+          </Tooltip>
           <span className="text-sm font-semibold tracking-wide">{attributes.workRate}</span>
         </div>
         <div className="flex items-center justify-between py-2.5">
-          <span className="text-sm text-[#c7cbd6]">Style</span>
+          <Tooltip text={ATTRIBUTE_HELP.style}>
+            <span className="text-sm text-[#c7cbd6]">Style</span>
+          </Tooltip>
           <span className="text-sm font-semibold tracking-wide">{style}</span>
         </div>
       </div>

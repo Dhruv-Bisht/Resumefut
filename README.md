@@ -22,15 +22,27 @@ The results page mirrors a scouting report, not just a bare card:
 - **Header** — rating badge, name (auto-detected from the resume, click to
   edit), position, archetype, and a one-line style tagline
 - **Left panel** — attributes (skill moves / weak foot / work rate / style,
-  as star ratings) and detected "playstyles"
-- **Center** — the downloadable FUT-style card itself
+  as star ratings) and detected "playstyles" — hover the ⓘ next to each
+  attribute for what it actually measures
+- **Center** — the downloadable FUT-style card itself, with an optional
+  uploaded photo and a nationality flag
 - **Right panel** — scouting metrics: each of the six stats alongside the
   real underlying signal it came from (e.g. "6 yrs tracked", "9 skills
   matched") with a progress bar
 
 Name entry has been removed from the form — `extractName()` in
-`lib/scoring.js` pulls it from the top of the resume text, and it's
-editable inline on the results page if it guesses wrong.
+`lib/scoring.js` pulls it from the top of the resume text (with proper line
+reconstruction from the PDF, not a naive text dump — see
+`lib/extractPdfText.js`), and it's editable inline on the results page if it
+guesses wrong.
+
+## Derby Mode
+
+`/derby` — upload two resumes and battle them stat by stat, like a kids'
+trading-card game. Both get scored independently, then each of the six
+categories is compared head to head; whoever wins more categories wins the
+derby (ties break on overall rating). Purely a fun visualization on top of
+the same scoring engine — no new logic beyond the comparison itself.
 
 ## Stack
 
