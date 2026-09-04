@@ -10,7 +10,7 @@ import Footer from '../components/Footer';
 const LOCAL_COUNT_KEY = 'resumefut_cards_rated';
 
 const SAMPLE_CARDS = [
-  { name: 'TORVALDS', overall: 96, position: 'ST', archetype: 'THE ICON', tier: 'goldtier', statList: [{ key: 'exp', label: 'EXP', value: 98 }, { key: 'skl', label: 'SKL', value: 96 }, { key: 'led', label: 'LED', value: 92 }, { key: 'imp', label: 'IMP', value: 97 }, { key: 'edu', label: 'EDU', value: 91 }, { key: 'ver', label: 'VER', value: 88 }], photo: '', flag: '🇺🇸' },
+  { name: 'INOVATOR', overall: 96, position: 'ST', archetype: 'THE ICON', tier: 'goldtier', statList: [{ key: 'exp', label: 'EXP', value: 98 }, { key: 'skl', label: 'SKL', value: 96 }, { key: 'led', label: 'LED', value: 92 }, { key: 'imp', label: 'IMP', value: 97 }, { key: 'edu', label: 'EDU', value: 91 }, { key: 'ver', label: 'VER', value: 88 }], photo: '', flag: '🇺🇸' },
   { name: 'ENGINEER', overall: 89, position: 'CAM', archetype: 'THE SPECIALIST', tier: 'goldtier', statList: [{ key: 'exp', label: 'EXP', value: 82 }, { key: 'skl', label: 'SKL', value: 94 }, { key: 'led', label: 'LED', value: 78 }, { key: 'imp', label: 'IMP', value: 91 }, { key: 'edu', label: 'EDU', value: 88 }, { key: 'ver', label: 'VER', value: 86 }], photo: '', flag: '🇮🇳' },
   { name: 'BUILDER', overall: 84, position: 'CDM', archetype: 'THE CLOSER', tier: 'goldtier', statList: [{ key: 'exp', label: 'EXP', value: 76 }, { key: 'skl', label: 'SKL', value: 87 }, { key: 'led', label: 'LED', value: 83 }, { key: 'imp', label: 'IMP', value: 90 }, { key: 'edu', label: 'EDU', value: 79 }, { key: 'ver', label: 'VER', value: 81 }], photo: '', flag: '🇬🇧' },
 ];
@@ -86,11 +86,6 @@ function HowItWorksModal({ onClose }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             {signals.map(([code, label, desc]) => <div key={code} className="bg-ink border border-hairline rounded-lg p-4"><div className="font-display font-bold text-gold">{code}</div><div className="font-semibold text-[#d7dae2] mt-1">{label}</div><div className="text-xs text-[#747b8a] mt-1 leading-relaxed">{desc}</div></div>)}
           </div>
-        </div>
-        <div className="bg-panel border border-hairline rounded-xl p-5">
-          <p className="text-xs tracking-[0.2em] text-gold">THE MODEL</p>
-          <h3 className="font-display font-bold text-xl mt-2">Machine learning calibrates the final rating.</h3>
-          <p className="text-sm text-[#8f96a5] mt-2 leading-relaxed">ResumeFUT extracts measurable profile features, then a lightweight ridge-regression model calibrates the overall rating. When public GitHub or LeetCode profiles are present, their available signals are included in that model input.</p>
         </div>
         <div className="border-t border-hairline pt-5">
           <p className="text-xs tracking-[0.2em] text-gold">THE LADDER</p>

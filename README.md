@@ -322,3 +322,6 @@ MIT — see [`LICENSE`](./LICENSE).
 **Get scouted.**
 
 </div>
+
+### Resume validation
+ResumeFUT accepts resume-style documents with recognizable sections such as Experience, Skills, Projects, Education and Contact. It rejects common non-resume documents such as admit cards, hall tickets and examination documents before scoring.

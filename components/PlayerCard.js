@@ -82,8 +82,7 @@ export default function PlayerCard({ card, cardRef, editable = false, onPhotoCha
           )}
         </div>
 
-        {flag && !editable && <div className={`absolute left-5 top-[94px] text-base leading-none ${textClass}`} title="Nationality">{flag}</div>}
-        {editable && flag && <div className={`absolute left-5 top-[94px] text-base leading-none ${textClass}`} title="Nationality">{flag}</div>}
+        {flag && <div className={`absolute left-5 top-[112px] text-base leading-none ${textClass}`} title="Nationality">{flag}</div>}
 
         <div className={`w-full text-center mt-2 ${textClass}`}>
           <div className="font-display font-bold text-lg tracking-wide truncate px-2 text-shadow-soft">{name}</div>
@@ -98,15 +97,15 @@ export default function PlayerCard({ card, cardRef, editable = false, onPhotoCha
       <div className="text-center mt-2"><div className="font-display font-semibold text-base tracking-wide text-gold">{archetype}</div></div>
 
       {editable && nationOpen && (
-        <div data-card-control="true" className="fixed z-[100] w-[260px] rounded-xl bg-[#f4f5f8] text-[#161a22] border border-[#c8ccd4] shadow-2xl p-2" style={menuStyle}>
-          <input autoFocus value={nationSearch} onChange={(e) => setNationSearch(e.target.value)} placeholder="Search nationality..." className="w-full h-9 rounded-md bg-white border border-[#c6cad2] px-3 text-sm outline-none focus:ring-2 focus:ring-[#e3bd4a]" />
+        <div data-card-control="true" className="fixed z-[100] w-[280px] rounded-xl bg-[#151a24] text-[#e7e9ee] border border-[#3a4150] shadow-2xl shadow-black/50 p-2" style={menuStyle}>
+          <input autoFocus value={nationSearch} onChange={(e) => setNationSearch(e.target.value)} placeholder="Search nationality..." className="w-full h-9 rounded-md bg-[#0b0e14] text-[#e7e9ee] placeholder:text-[#697181] border border-[#3a4150] px-3 text-sm outline-none focus:ring-2 focus:ring-[#e3bd4a]" />
           <div className="mt-2 max-h-64 overflow-y-auto pr-1">
             {filteredCountries.map((country) => (
-              <button key={country.code || 'none'} type="button" onClick={() => chooseNation(country)} className="w-full flex items-center gap-3 rounded-md px-2.5 py-2 text-left hover:bg-[#e7e9ee] transition">
-                <span className="text-lg w-7">{country.flag || '—'}</span><span className="text-sm">{country.name}</span>
+              <button key={country.code || 'none'} type="button" onClick={() => chooseNation(country)} className="w-full flex items-center gap-3 rounded-md px-2.5 py-2 text-left hover:bg-[#232936] transition">
+                <span className="text-lg w-7 shrink-0">{country.flag || '—'}</span><span className="text-sm">{country.name}</span>
               </button>
             ))}
-            {!filteredCountries.length && <div className="px-2.5 py-4 text-sm text-[#6d7280]">No nationality found.</div>}
+            {!filteredCountries.length && <div className="px-2.5 py-4 text-sm text-[#8f96a5]">No nationality found.</div>}
           </div>
         </div>
       )}

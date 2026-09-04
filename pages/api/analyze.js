@@ -1,4 +1,5 @@
 import { rateResume } from '../../lib/scoring';
+import { validateResumeText } from '../../lib/resumeValidation';
 
 function extractProfiles(text) {
   const github = new Set();
@@ -72,8 +73,13 @@ export default async function handler(req, res) {
   }
 
   const { text, name } = req.body || {};
-  if (!text || typeof text !== 'string' || text.trim().length < 30) {
-    return res.status(400).json({ error: 'Not enough text to work with — paste more of your resume or try a different PDF.' });
+  if (!text || typeof text !== 'string') {
+    return res.status(400).json({ error: 'Add a resume PDF or paste your resume text first.' });
+  }
+
+  const validation = validateResumeText(text);
+  if (!validation.valid) {
+    return res.status(400).json({ error: validation.message });
   }
 
   try {
