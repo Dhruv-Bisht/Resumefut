@@ -2,6 +2,8 @@
 
 # ResumeFUT
 
+<img src="./docs/assets/resumefut-hero.png" width="55%" alt="ResumeFUT — Your resume. Your game. Get scouted." />
+
 ### GET SCOUTED. ⚽
 
 **Your resume, turned into a football-style player card rated out of 99.**
@@ -34,10 +36,6 @@ PLAYER CARD
 DOWNLOAD / SHARE / ⚔️ DERBY
 ```
 
-<div align="center">
-<img src="./docs/assets/frontend-reference.png" width="25%" alt="ResumeFUT frontend" />
-<img src="./docs/assets/card-example.png" width="25%" alt="ResumeFUT player card" />
-</div>
 
 ---
 
