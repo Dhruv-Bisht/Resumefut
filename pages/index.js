@@ -8,24 +8,11 @@ import ResumeUploader from '../components/ResumeUploader';
 import { extractPdfText } from '../lib/extractPdfText';
 import Footer from '../components/Footer';
 
-const LOCAL_COUNT_KEY = 'resumefut_cards_rated';
-
 const SAMPLE_CARDS = [
   { name: 'INOVATOR', overall: 96, position: 'ST', archetype: 'THE ICON', tier: 'goldtier', statList: [{ key: 'exp', label: 'EXP', value: 98 }, { key: 'skl', label: 'SKL', value: 96 }, { key: 'led', label: 'LED', value: 92 }, { key: 'imp', label: 'IMP', value: 97 }, { key: 'edu', label: 'EDU', value: 91 }, { key: 'ver', label: 'VER', value: 88 }], photo: '/assets/face-1.png', flag: '🇺🇸' },
   { name: 'ENGINEER', overall: 89, position: 'CAM', archetype: 'THE SPECIALIST', tier: 'goldtier', statList: [{ key: 'exp', label: 'EXP', value: 82 }, { key: 'skl', label: 'SKL', value: 94 }, { key: 'led', label: 'LED', value: 78 }, { key: 'imp', label: 'IMP', value: 91 }, { key: 'edu', label: 'EDU', value: 88 }, { key: 'ver', label: 'VER', value: 86 }], photo: '/assets/face-2.png', flag: '🇮🇳' },
   { name: 'BUILDER', overall: 84, position: 'CDM', archetype: 'THE CLOSER', tier: 'goldtier', statList: [{ key: 'exp', label: 'EXP', value: 76 }, { key: 'skl', label: 'SKL', value: 87 }, { key: 'led', label: 'LED', value: 83 }, { key: 'imp', label: 'IMP', value: 90 }, { key: 'edu', label: 'EDU', value: 79 }, { key: 'ver', label: 'VER', value: 81 }], photo: '/assets/face-3.png', flag: '🇬🇧' },
 ];
-
-function readLocalCardCount() {
-  if (typeof window === 'undefined') return 0;
-
-  const value = Number.parseInt(
-    window.localStorage.getItem(LOCAL_COUNT_KEY) || '0',
-    10
-  );
-
-  return Number.isFinite(value) ? value : 0;
-}
 
 function Modal({ title, children, onClose, wide = false }) {
   useEffect(() => {
@@ -174,7 +161,10 @@ export default function Home() {
   const derbyResultRef = useRef(null);
 
   useEffect(() => {
-    setCardsRated(readLocalCardCount());
+    fetch('/api/card-count')
+      .then((res) => res.json())
+      .then((data) => setCardsRated(data.count || 0))
+      .catch(() => {});
 
     fetch('https://api.github.com/repos/Dhruv-Bisht/Resumefut', {
       headers: { Accept: 'application/vnd.github+json' },
@@ -185,17 +175,19 @@ export default function Home() {
           setGithubStars(data.stargazers_count);
         }
       })
-      .catch(() => { });
+      .catch(() => {});
   }, []);
 
-  function recordCardRated() {
-    const next = readLocalCardCount() + 1;
-
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem(LOCAL_COUNT_KEY, String(next));
+  async function recordCardRated() {
+    try {
+      const res = await fetch('/api/card-count', { method: 'POST' });
+      const data = await res.json();
+      if (typeof data.count === 'number') {
+        setCardsRated(data.count);
+      }
+    } catch (err) {
+      // fail silently — don't block the card generation flow
     }
-
-    setCardsRated(next);
   }
 
   async function scoreResume(text, pageCount = null) {
@@ -230,7 +222,7 @@ export default function Home() {
       setDisplayName(nextCard.name);
       setUploadOpen(false);
       setStatus('done');
-      recordCardRated();
+      await recordCardRated();
     } catch (err) {
       setError(err.message || 'Something went wrong scoring that resume.');
       setStatus('error');
@@ -363,7 +355,7 @@ export default function Home() {
       setDerbyStatus('ready');
       setDerbyBattleStarted(false);
 
-      recordCardRated();
+      await recordCardRated();
     } catch (err) {
       setDerbyError(err.message || 'Could not scout the opponent.');
       setDerbyStatus('error');
