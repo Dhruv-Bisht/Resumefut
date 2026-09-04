@@ -1,4 +1,4 @@
-/* @tailwind base;
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -19,7 +19,7 @@ body {
     url('/football-background.webp');
   background-size: cover;
   background-position: center center;
-  background-attachment: fixed;
+  background-attachment: scroll;
   background-repeat: no-repeat;
 }
 
@@ -111,10 +111,10 @@ body {
   color: #e3bd4a;
   text-decoration: underline;
   text-underline-offset: 3px;
-} */
+}
 
 
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -234,4 +234,4 @@ body::before {
   color: #e3bd4a;
   text-decoration: underline;
   text-underline-offset: 3px;
-}
+} */
