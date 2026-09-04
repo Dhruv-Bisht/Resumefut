@@ -57,3 +57,48 @@ body {
     transparent 14px
   );
 }
+
+.prose-resumefut {
+  color: #aeb4c1;
+  line-height: 1.75;
+}
+
+.prose-resumefut p {
+  margin: 0 0 1.25rem;
+}
+
+.prose-resumefut h2 {
+  color: #e7e9ee;
+  font-family: var(--font-oswald);
+  font-weight: 700;
+  font-size: 1.35rem;
+  letter-spacing: 0.02em;
+  margin: 2.5rem 0 0.75rem;
+}
+
+.prose-resumefut h3 {
+  color: #e7e9ee;
+  font-family: var(--font-oswald);
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin: 1.8rem 0 0.5rem;
+}
+
+.prose-resumefut ul {
+  margin: 0 0 1.35rem;
+  padding-left: 1.25rem;
+}
+
+.prose-resumefut li {
+  margin: 0.5rem 0;
+}
+
+.prose-resumefut strong {
+  color: #dfe2e8;
+}
+
+.prose-resumefut a {
+  color: #e3bd4a;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
