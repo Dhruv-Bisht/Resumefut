@@ -73,9 +73,9 @@ export default function PlayerCard({ card, cardRef, editable = false, onPhotoCha
           {editable && (
             <>
               <button type="button" data-card-control="true" onClick={() => photoInputRef.current?.click()} className="absolute -right-2 bottom-0 w-7 h-7 rounded-full bg-[#0b0e14] border border-white/30 shadow-lg flex items-center justify-center text-xs hover:scale-105 transition" title="Add or change photo" aria-label="Add or change photo">📷</button>
-              <input ref={photoInputRef} data-card-control="true" type="file" accept="image/*" onChange={handlePhoto} className="hidden" />
+              <input ref={photoInputRef} data-card-control="true" data-derby-photo-input="true" type="file" accept="image/*" onChange={handlePhoto} className="hidden" />
 
-              <button ref={nationButtonRef} type="button" data-card-control="true" onClick={() => setNationOpen((open) => !open)} className="absolute -left-2 bottom-[-2px] w-7 h-7 rounded-full bg-[#0b0e14] border border-white/30 shadow-lg flex items-center justify-center text-sm hover:scale-105 transition" title="Choose nationality" aria-label="Choose nationality">
+              <button ref={nationButtonRef} data-derby-nation-button="true" type="button" data-card-control="true" onClick={() => setNationOpen((open) => !open)} className="absolute -left-2 bottom-[-2px] w-7 h-7 rounded-full bg-[#0b0e14] border border-white/30 shadow-lg flex items-center justify-center text-sm hover:scale-105 transition" title="Choose nationality" aria-label="Choose nationality">
                 {flag || '🌐'}
               </button>
             </>
