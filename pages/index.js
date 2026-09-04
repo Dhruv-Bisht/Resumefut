@@ -444,11 +444,28 @@ export default function Home() {
   }
 
   async function handleDerbyDownload() {
-    if (!derbyResultRef.current) return;
+  if (!derbyResultRef.current) return;
 
-    const { toPng } = await import('html-to-image');
+  const { toPng } = await import('html-to-image');
 
-    const dataUrl = await toPng(derbyResultRef.current, {
+  const element = derbyResultRef.current;
+
+  // Save original styles
+  const originalBackgroundImage = element.style.backgroundImage;
+  const originalBackgroundSize = element.style.backgroundSize;
+  const originalBackgroundPosition = element.style.backgroundPosition;
+  const originalBackgroundRepeat = element.style.backgroundRepeat;
+
+  // Add football background ONLY while downloading
+  element.style.backgroundImage =
+    "linear-gradient(180deg, rgba(11,14,20,0.58) 0%, rgba(11,14,20,0.68) 55%, rgba(11,14,20,0.80) 100%), url('/football-background.webp')";
+
+  element.style.backgroundSize = 'cover';
+  element.style.backgroundPosition = 'center';
+  element.style.backgroundRepeat = 'no-repeat';
+
+  try {
+    const dataUrl = await toPng(element, {
       pixelRatio: 2,
       cacheBust: true,
       filter: (node) =>
@@ -470,8 +487,14 @@ export default function Home() {
 
     link.href = dataUrl;
     link.click();
+  } finally {
+    // Restore the page appearance
+    element.style.backgroundImage = originalBackgroundImage;
+    element.style.backgroundSize = originalBackgroundSize;
+    element.style.backgroundPosition = originalBackgroundPosition;
+    element.style.backgroundRepeat = originalBackgroundRepeat;
   }
-
+}
   async function handleDownload() {
     if (!cardRef.current) return;
 
@@ -942,13 +965,13 @@ export default function Home() {
                 <div
                   ref={derbyResultRef}
                   className="max-w-5xl mx-auto rounded-2xl overflow-hidden"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(180deg, rgba(11, 14, 20, 0.58) 0%, rgba(11, 14, 20, 0.68) 55%, rgba(11, 14, 20, 0.80) 100%), url('/football-background.webp')",
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                  }}
+                  // style={{
+                    // backgroundImage:
+                    //   "linear-gradient(180deg, rgba(11, 14, 20, 0.58) 0%, rgba(11, 14, 20, 0.68) 55%, rgba(11, 14, 20, 0.80) 100%), url('/football-background.webp')",
+                    // backgroundSize: 'cover',
+                    // backgroundPosition: 'center',
+                    // backgroundRepeat: 'no-repeat',
+                  // }}
                 >
                   <div className="p-4 md:p-7">
                     <div className="text-center mb-4">
