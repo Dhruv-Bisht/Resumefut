@@ -935,9 +935,10 @@ export default function Home() {
               ) : (
                 <div
                   ref={derbyResultRef}
-                  className="max-w-5xl mx-auto rounded-2xl overflow-hidden border border-hairline"
+                  className="max-w-5xl mx-auto rounded-2xl overflow-hidden border"
                   style={{
                     background: 'transparent',
+                    border: 'none',
                   }}
                 >
                   <div className="p-4 md:p-7">
